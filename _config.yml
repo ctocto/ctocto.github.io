@@ -5,8 +5,8 @@
 # Site
 title: Northerner
 subtitle: 
-description:
-author: Hefan
+description: WEB前端
+author: Norther
 language:
 timezone:
 
@@ -18,14 +18,14 @@ permalink: :year/:month/:day/:title/
 permalink_defaults:
 
 # Directory
-source_dir: source
-public_dir: public
-tag_dir: tags
-archive_dir: archives
-category_dir: categories
-code_dir: downloads/code
-i18n_dir: :lang
-skip_render:
+#source_dir: source
+#public_dir: public
+#tag_dir: tags
+#archive_dir: archives
+#category_dir: categories
+#code_dir: downloads/code
+#i18n_dir: :lang
+#skip_render:
 
 # Writing
 new_post_name: :title.md # File name of new posts
@@ -74,7 +74,7 @@ duoshuo_share: false
 deploy:
   type: git
   repository: git@github.com:ctocto/ctocto.github.io.git
-  branch: master
+  branch: master·
 
 jsonContent:
     meta: false
@@ -92,6 +92,6 @@ jsonContent:
       link: false
       permalink: false
       excerpt: false
-      categories: false
+      categories: true
       tags: true
 

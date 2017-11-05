@@ -74,7 +74,7 @@ duoshuo_share: false
 deploy:
   type: git
   repository: git@github.com:ctocto/ctocto.github.io.git
-  branch: master·
+  branch: master
 
 jsonContent:
     meta: false

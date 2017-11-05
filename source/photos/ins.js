@@ -117,10 +117,10 @@
           var liTmpl = "";
           for (var i = 0, len = data.link.length; i < len; i++) {
             var minSrc =
-              "https://github.com/ctocto/Blog-Back-Up/photos/"; +
+              "http://www.northerner.site/Blog-Back-Up/photos/" +
               data.link[i];
             var src =
-              "https://github.com/ctocto/Blog-Back-Up/photos/"; +
+              "http://www.northerner.site/Blog-Back-Up/photos/" +
               data.link[i];
             var type = data.type[i];
             var target = src + (type === "video" ? ".mp4" : ".jpg");
@@ -139,7 +139,7 @@
               type +
               '" data-src="' +
               minSrc +
-              '" src="/assets/img/empty.png" itemprop="thumbnail" onload="lzld(this)">\
+              '" src="'+minSrc+'" itemprop="thumbnail" onload="lzld(this)">\
                 </a>\
                 <figcaption style="display:none" itemprop="caption description">' +
               data.text[i] +

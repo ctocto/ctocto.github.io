@@ -1,7 +1,7 @@
 ---
-title: CentOS8 部署web服务：Nginx、Mysql、Node.js
+title: CentOS8 部署web服务：Nginx、MySQL、Node.js
 date: 2020-09-24 10:46:09
-tags: [服务器,CentOS8,Nginx,MySql,Node.js,nvm]
+tags: [服务器,CentOS,Nginx,MySQL,Node.js,nvm]
 categories: 饭碗(技术)
 ---
 
@@ -106,7 +106,7 @@ systemctl restart mysqld
 # 查看服务
 systemctl status mysqld 
 ```
-
+> [安全设置](https://ctocto.github.io/2020/09/24/MySql%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%AE%89%E5%85%A8%E8%AE%BE%E7%BD%AE/)
 #### 常用命令
 ```bash
 # 查看开机启动程序列表

@@ -1,6 +1,6 @@
 ---
 title: CentOS8 部署web服务：Nginx、Mysql、Node.js
-date: 2017-04-01 10:28:09
+date: 2020-09-24 10:46:09
 tags: [服务器,CentOS8,Nginx,MySql,Node.js,nvm]
 categories: 饭碗(技术)
 ---

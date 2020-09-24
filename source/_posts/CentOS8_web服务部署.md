@@ -1,3 +1,10 @@
+---
+title: CentOS8 部署web服务：Nginx、Mysql、Node.js
+date: 2017-04-01 10:28:09
+tags: [服务器,CentOS8,Nginx,MySql,Node.js,nvm]
+categories: 饭碗(技术)
+---
+
 一台Ali ECS cento8.2服务器, 开始部署服务
 
 ### 一、远程登录

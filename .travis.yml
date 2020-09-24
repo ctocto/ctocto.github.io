@@ -16,6 +16,7 @@ cache:
   - node_modules
 
 install:
+- node -v
 - npm install -g hexo-cli
 - npm install
 

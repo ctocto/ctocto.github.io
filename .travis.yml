@@ -1,5 +1,6 @@
 .travis.ymllanguage: node_js
-node_js: stable
+node_js: 
+  - 12
 
 deploy:
   provider: pages

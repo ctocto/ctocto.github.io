@@ -85,9 +85,23 @@ yum -y remove 包名
 mysqladmin --version
 # 初始化mysql
 mysqld --initialize //创建数据文件目录和mysql系统数据库 产生随机root密码
+```
+
+```
 # 启动mysql服务
 systemctl start mysqld
+```
+![无权限](/images/mysql_journalctl_1.png)
 
+启动失败，因为`/var/lib/mysql` 目录权限不够
+
+![无权限](/images/mysql_journalctl_2.png)
+
+`/var/lib/mysql` 目录授权
+
+![无权限](/images/mysql_journalctl_3.png)
+
+```
 # 查看随机root 密码
 cat /var/log/mysqld.log | grep password 
 # 或者

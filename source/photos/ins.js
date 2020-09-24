@@ -117,10 +117,10 @@
           var liTmpl = "";
           for (var i = 0, len = data.link.length; i < len; i++) {
             var minSrc =
-              "http://www.northerner.site/Blog-Back-Up/photos/" +
+              "https://ctocto.github.io/Blog-Back-Up/photos/" +
               data.link[i];
             var src =
-              "http://www.northerner.site/Blog-Back-Up/photos/" +
+              "https://ctocto.github.io/Blog-Back-Up/photos/" +
               data.link[i];
             var type = data.type[i];
             var target = src + (type === "video" ? ".mp4" : ".jpg");

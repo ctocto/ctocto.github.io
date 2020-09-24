@@ -1,3 +1,10 @@
+---
+title: Mysql8 配置允许远程连接
+date: 2020-09-24 10:46:09
+tags: [服务器,MySql,Navicat]
+categories: 饭碗(技术)
+---
+
 Mysql8 配置允许远程连接
 
 一、登陆MySql

@@ -31,6 +31,10 @@ services:                                       # 多个容器集合
 ```bash
 docker-compose up -d
 ```
+强制重新构建容器
+```bash
+docker-compose up -d --force-recreate
+```
 
 ##### start
 ```bash

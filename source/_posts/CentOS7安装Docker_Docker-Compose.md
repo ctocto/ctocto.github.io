@@ -1,6 +1,6 @@
 ---
 title: CentOS7 安装Docker、Docker Compose
-date: 2020-09-24 10:46:09
+date: 2021-04-12 17:46:09
 tags: [服务器,CentOS,Docker,docker-compose]
 categories: 饭碗(技术)
 ---

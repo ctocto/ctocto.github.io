@@ -73,7 +73,7 @@ nginx -t
 
 ```bash
 # 下载mysql的repo源
-wget https://cdn.mysql.com//Downloads/MySQL-8.0/mysql-community-server-8.0.21-1.el8.x86_64.rpm #选择RPM包 https://dev.mysql.com/downloads/mysql/
+wget https://cdn.mysql.com//Downloads/MySQL-8.0/mysql-community-server-8.0.21-1.el8.x86_64.rpm #选择RPM包 https://dev.mysql.com/downloads/mysql/  或 http://repo.mysql.com/yum/
 # 安装源
 rpm -ivh mysql-community-server-8.0.21-1.el8.x86_64.rpm --nodeps --force
 # 安装mysql (可以不需要前两步，直接执行安装，但可能版本不是想要的。)

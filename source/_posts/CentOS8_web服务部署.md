@@ -7,32 +7,32 @@ categories: 饭碗(技术)
 
 一台Ali ECS cento8.2服务器, 开始部署服务
 
-### 一、远程登录
+## 一、远程登录
 ssh、...
 
-### 二、安装环境
+## 二、安装环境
 
-#### 安装 Git
+### 安装 Git
 
 ```bash
 yum install git
 ```
 
-#### 安装nvm
+### 安装nvm
 ```bash
 wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
 
 source ~/.bashrc
 ```
 
-#### 安装Node.js
+### 安装Node.js
 ```bash
 nvm install 14.12.0
 
 node -v
 ```
 
-#### 安装Nginx
+### 安装Nginx
 
 要设置yum存储库，请创建/etc/yum.repos.d/nginx.repo 包含以下内容的文件 
 ```
@@ -69,7 +69,7 @@ nginx -v
 nginx -t
 ```
 
-#### 安装MySQL
+### 安装MySQL
 
 ```bash
 # 下载mysql的repo源
@@ -98,9 +98,40 @@ systemctl start mysqld
 ![无权限](/images/mysql_journalctl_2.png)
 
 `/var/lib/mysql` 目录授权
+```sh
+chown -R mysql:mysql /var/lib/mysql/
+```
 
 ![无权限](/images/mysql_journalctl_3.png)
 
+#### 2013 - Lost connection to MySQL server at 'waiting for initial communication packet', system error: 60 "Operation timed out"
+首先找到 my.cnf centos系统下 此文件在 etc目录下。
+
+接着 vi my.cnf
+
+看看是否有绑定本地回环地址的配置，如果有，注释掉下面这段文字：（在文字之前加上#号即可）
+
+```#bind-address = 127.0.0.1```
+
+然后找到[mysqld]部分的参数，在配置后面建立一个新行，添加下面这个参数：
+
+```skip-name-resolve```
+
+保存文件并重启MySQL
+
+#### 在忘记root密码的时候启动MySql
+`vi /etc/my.cnf`
+
+在
+
+[mysqld] 下面加上:
+
+`skip-grant-tables`
+配置项。
+
+保存文件并重启MySQL
+
+#### MySql 命令
 ```
 # 查看随机root 密码
 cat /var/log/mysqld.log | grep password 
@@ -121,7 +152,8 @@ systemctl restart mysqld
 systemctl status mysqld 
 ```
 > [安全设置](https://ctocto.github.io/2020/09/24/MySql%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%AE%89%E5%85%A8%E8%AE%BE%E7%BD%AE/)
-#### 常用命令
+
+## 常用命令
 ```bash
 # 查看开机启动程序列表
 systemctl list-unit-files

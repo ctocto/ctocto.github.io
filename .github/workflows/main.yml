@@ -28,7 +28,7 @@ jobs:
             ${{ runner.os }}-node-
 
       - run: npm install -g hexo-cli
-      - run: npm ci
+      - run: npm install
       - run: hexo generate
 
       - name: Deploy

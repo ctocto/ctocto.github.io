@@ -6,19 +6,19 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="https://ctocto.github.io">
-  <title>iframe 在ios上无法滚动问题 | Northerner</title>
+  <title>Web 端Axios 下载文件流 | Northerner</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="iframe 在ios上无法滚动问题场景：A页面中用iframe 来嵌套B页面，而B页面的内容很多（超出一屏），想要的展示效果是看不出嵌套，正常滑动查看全部页面，所以给iframe设置高度与屏幕一样高。那么问题来：安卓手机上完美无缺，而ios上不能滑动，就像是给一个div 设置了overflow:hidden;一样，超出的内容不能展示了。那么我们去掉高度，发现ios上自动撑开了，跟B页面一样高。而">
-<meta name="keywords" content="移动端,iframe,ios">
+  <meta name="description" content="web 端 利用Axios 网络库，来下载文件流。如：下载后端返回的execl文件流。 封装利用axios 的 拦截器 来处理接口返回的结果。创建Blob 对象的url, 手动出发click 时间下载文件。 1234567891011121314151617181920212223242526272829303132333435// request.jsimport axios from &apos;axi">
+<meta name="keywords" content="JavaScript,js,Web,stream,下载,download,Axios">
 <meta property="og:type" content="article">
-<meta property="og:title" content="iframe 在ios上无法滚动问题">
-<meta property="og:url" content="https://ctocto.github.io/2017/03/05/iframe-ios-notslid/index.html">
+<meta property="og:title" content="Web 端Axios 下载文件流">
+<meta property="og:url" content="https://ctocto.github.io/2021/12/17/axios-download-stream/index.html">
 <meta property="og:site_name" content="Northerner">
-<meta property="og:description" content="iframe 在ios上无法滚动问题场景：A页面中用iframe 来嵌套B页面，而B页面的内容很多（超出一屏），想要的展示效果是看不出嵌套，正常滑动查看全部页面，所以给iframe设置高度与屏幕一样高。那么问题来：安卓手机上完美无缺，而ios上不能滑动，就像是给一个div 设置了overflow:hidden;一样，超出的内容不能展示了。那么我们去掉高度，发现ios上自动撑开了，跟B页面一样高。而">
+<meta property="og:description" content="web 端 利用Axios 网络库，来下载文件流。如：下载后端返回的execl文件流。 封装利用axios 的 拦截器 来处理接口返回的结果。创建Blob 对象的url, 手动出发click 时间下载文件。 1234567891011121314151617181920212223242526272829303132333435// request.jsimport axios from &apos;axi">
 <meta property="og:updated_time" content="2021-12-17T11:10:28.587Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="iframe 在ios上无法滚动问题">
-<meta name="twitter:description" content="iframe 在ios上无法滚动问题场景：A页面中用iframe 来嵌套B页面，而B页面的内容很多（超出一屏），想要的展示效果是看不出嵌套，正常滑动查看全部页面，所以给iframe设置高度与屏幕一样高。那么问题来：安卓手机上完美无缺，而ios上不能滑动，就像是给一个div 设置了overflow:hidden;一样，超出的内容不能展示了。那么我们去掉高度，发现ios上自动撑开了，跟B页面一样高。而">
+<meta name="twitter:title" content="Web 端Axios 下载文件流">
+<meta name="twitter:description" content="web 端 利用Axios 网络库，来下载文件流。如：下载后端返回的execl文件流。 封装利用axios 的 拦截器 来处理接口返回的结果。创建Blob 对象的url, 手动出发click 时间下载文件。 1234567891011121314151617181920212223242526272829303132333435// request.jsimport axios from &apos;axi">
   
     <link rel="alternative" href="/atom.xml" title="Northerner" type="application/atom+xml">
   
@@ -152,30 +152,31 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-iframe-ios-notslid" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-axios-download-stream" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      iframe 在ios上无法滚动问题
+      Web 端Axios 下载文件流
     </h1>
   
 
         
-        <a href="/2017/03/05/iframe-ios-notslid/" class="archive-article-date">
-  	<time datetime="2017-03-05T15:29:46.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-03-05</time>
+        <a href="/2021/12/17/axios-download-stream/" class="archive-article-date">
+  	<time datetime="2021-12-17T19:00:09.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-12-17</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h3 id="iframe-在ios上无法滚动问题"><a href="#iframe-在ios上无法滚动问题" class="headerlink" title="iframe 在ios上无法滚动问题"></a>iframe 在ios上无法滚动问题</h3><h4 id="场景："><a href="#场景：" class="headerlink" title="场景："></a>场景：</h4><p>A页面中用iframe 来嵌套B页面，而B页面的内容很多（超出一屏），想要的展示效果是看不出嵌套，正常滑动查看全部页面，所以给iframe设置高度与屏幕一样高。那么问题来：<br>安卓手机上完美无缺，而ios上不能滑动，就像是给一个div 设置了overflow:hidden;一样，超出的内容不能展示了。<br>那么我们去掉高度，发现ios上自动撑开了，跟B页面一样高。而安卓上发现iframe 高度是一个默认高度。<br>这样一来，我们需要判断设备来坐兼容了吗？显然在是不明智。<br>我们只需要这样：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&lt;div class=&quot;page_box&quot;&gt;</div><div class="line">    &lt;iframe id=&quot;iframe1&quot; src=&quot;&quot;&gt;  </div><div class="line">    &lt;/iframe&gt; </div><div class="line">&lt;/div&gt;</div></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">.page_box&#123;</div><div class="line">     -webkit-overflow-scrolling: touch;  </div><div class="line">     overflow-y: scroll;  </div><div class="line"> &#125;</div></pre></td></tr></table></figure>
-<p>给iframe 外边套一层，给这个容器设置这样的样式，给iframe 设置跟屏幕一样高度就OK了。</p>
+        <p>web 端 利用Axios 网络库，来下载文件流。如：下载后端返回的execl文件流。</p>
+<h3 id="封装"><a href="#封装" class="headerlink" title="封装"></a>封装</h3><p>利用axios 的 拦截器 来处理接口返回的结果。创建Blob 对象的url, 手动出发click 时间下载文件。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// request.js</span></div><div class="line"></div><div class="line"><span class="keyword">import</span> axios <span class="keyword">from</span> <span class="string">'axios'</span></div><div class="line"></div><div class="line"><span class="keyword">const</span> download = axios.create(&#123;</div><div class="line">  method: <span class="string">'GET'</span>,</div><div class="line">  withCredentials: <span class="literal">true</span>,</div><div class="line">  baseURL: <span class="string">'/api'</span>,</div><div class="line">  responseType: <span class="string">'blob'</span>,</div><div class="line">  exposedHeaders: [<span class="string">'Content-Disposition'</span>]</div><div class="line">&#125;)</div><div class="line"></div><div class="line">download.interceptors.request.use(<span class="function"><span class="params">config</span> =&gt;</span> &#123;</div><div class="line">  <span class="keyword">const</span> token = Vue.ls.get(ACCESS_TOKEN)</div><div class="line">  <span class="keyword">if</span> (token) &#123;</div><div class="line">    config.headers[<span class="string">'Authorization'</span>] = <span class="string">`Bearer <span class="subst">$&#123;token&#125;</span>`</span> <span class="comment">// 让每个请求携带自定义 token 请根据实际情况自行修改</span></div><div class="line">  &#125;</div><div class="line">  <span class="keyword">return</span> config</div><div class="line">&#125;, err)</div><div class="line"></div><div class="line">download.interceptors.response.use(<span class="function">(<span class="params">response</span>) =&gt;</span> &#123;</div><div class="line">  <span class="keyword">const</span> &#123; config &#125; = response</div><div class="line">  <span class="keyword">const</span> blob = <span class="keyword">new</span> Blob([response.data], &#123; <span class="attr">type</span>: response.headers[<span class="string">'content-type'</span>] &#125;)</div><div class="line">  <span class="keyword">const</span> url = <span class="built_in">window</span>.URL.createObjectURL(blob)</div><div class="line">  <span class="keyword">const</span> link = <span class="built_in">document</span>.createElement(<span class="string">'a'</span>)</div><div class="line">  link.href = url</div><div class="line">  <span class="keyword">const</span> fileName = response.request.getResponseHeader(<span class="string">'Content-Disposition'</span>)?.match(<span class="regexp">/(filename=)(.*)(?=;)/g</span>)?.[<span class="number">0</span>]?.split(<span class="string">'='</span>)[<span class="number">1</span>]</div><div class="line"></div><div class="line">  link.setAttribute(<span class="string">'download'</span>, fileName ? <span class="built_in">decodeURIComponent</span>(fileName) : config.downloadFileName)</div><div class="line">  link.click()</div><div class="line">  <span class="built_in">window</span>.URL.revokeObjectURL(url)</div><div class="line">  <span class="keyword">return</span> response</div><div class="line">&#125;)</div><div class="line"></div><div class="line"><span class="keyword">export</span> &#123; axiosDownload &#125;</div></pre></td></tr></table></figure>
+<h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// api.js</span></div><div class="line"></div><div class="line"><span class="keyword">import</span> &#123; axiosDownload &#125; <span class="keyword">from</span> <span class="string">'./request.js'</span></div><div class="line"></div><div class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">exportData</span> (<span class="params">parameter</span>) </span>&#123;</div><div class="line">  <span class="keyword">return</span> axiosDownload(&#123;</div><div class="line">    url: <span class="string">'/order/export'</span>,</div><div class="line">    params: parameter</div><div class="line">  &#125;)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line">&lt;template&gt;</div><div class="line">  &lt;button :loading=&quot;loading&quot; @click=&quot;export&quot;&gt;导出Execl&lt;/button&gt;</div><div class="line">&lt;/template&gt;</div><div class="line">&lt;script&gt;</div><div class="line">import &#123; exportData &#125; from &apos;./api.js&apos;</div><div class="line"></div><div class="line">export default &#123;</div><div class="line">  data() &#123;</div><div class="line">    return &#123;</div><div class="line">      loading: false,</div><div class="line">    &#125;</div><div class="line">  &#125;,</div><div class="line">  methods: &#123;</div><div class="line">    export() &#123;</div><div class="line">      const payload = &#123;&#125;</div><div class="line">      exportData(payload).then(res =&gt; &#123;</div><div class="line">          this.loading = false</div><div class="line">          return true</div><div class="line">        &#125;)</div><div class="line">        .catch(res =&gt; &#123;</div><div class="line">          console.log(&apos;导出报错: &apos;, res)</div><div class="line">          this.loading = false</div><div class="line">          this.$message.error(&apos;导出失败&apos;)</div><div class="line">          return false</div><div class="line">        &#125;)</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line">&lt;/script&gt;</div></pre></td></tr></table></figure>
 
       
 
@@ -189,15 +190,31 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">移动端</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">JavaScript</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">iframe</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">js</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">ios</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Web</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">stream</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">下载</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">download</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Axios</a>
         		</li>
       		
 		</ul>
@@ -264,7 +281,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="http://s.jiathis.com/qrcode.php?url=https://ctocto.github.io/2017/03/05/iframe-ios-notslid/" alt="微信分享二维码">
+      <img src="http://s.jiathis.com/qrcode.php?url=https://ctocto.github.io/2021/12/17/axios-download-stream/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -278,15 +295,11 @@
   
 <nav id="article-nav">
   
-    <a href="/2017/03/05/pc-textoverflow-ellipsis-invalid/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          pc text-overflow:ellipsis; IE10 以下不生效
-        
-      </div>
-    </a>
   
+    <a href="/2021/08/10/interview-summary/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">100道 JavaScript 面试题，助你查漏补缺</div>
+      <i class="icon-circle-right"></i>
+    </a>
   
 </nav>
 

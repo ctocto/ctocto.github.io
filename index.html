@@ -152,6 +152,119 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-axios-download-stream" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/12/17/axios-download-stream/">Web 端Axios 下载文件流</a>
+    </h1>
+  
+
+        
+        <a href="/2021/12/17/axios-download-stream/" class="archive-article-date">
+  	<time datetime="2021-12-17T19:00:09.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-12-17</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>web 端 利用Axios 网络库，来下载文件流。如：下载后端返回的execl文件流。</p>
+<h3 id="封装"><a href="#封装" class="headerlink" title="封装"></a>封装</h3><p>利用axios 的 拦截器 来处理接口返回的结果。创建Blob 对象的url, 手动出发click 时间下载文件。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// request.js</span></div><div class="line"></div><div class="line"><span class="keyword">import</span> axios <span class="keyword">from</span> <span class="string">'axios'</span></div><div class="line"></div><div class="line"><span class="keyword">const</span> download = axios.create(&#123;</div><div class="line">  method: <span class="string">'GET'</span>,</div><div class="line">  withCredentials: <span class="literal">true</span>,</div><div class="line">  baseURL: <span class="string">'/api'</span>,</div><div class="line">  responseType: <span class="string">'blob'</span>,</div><div class="line">  exposedHeaders: [<span class="string">'Content-Disposition'</span>]</div><div class="line">&#125;)</div><div class="line"></div><div class="line">download.interceptors.request.use(<span class="function"><span class="params">config</span> =&gt;</span> &#123;</div><div class="line">  <span class="keyword">const</span> token = Vue.ls.get(ACCESS_TOKEN)</div><div class="line">  <span class="keyword">if</span> (token) &#123;</div><div class="line">    config.headers[<span class="string">'Authorization'</span>] = <span class="string">`Bearer <span class="subst">$&#123;token&#125;</span>`</span> <span class="comment">// 让每个请求携带自定义 token 请根据实际情况自行修改</span></div><div class="line">  &#125;</div><div class="line">  <span class="keyword">return</span> config</div><div class="line">&#125;, err)</div><div class="line"></div><div class="line">download.interceptors.response.use(<span class="function">(<span class="params">response</span>) =&gt;</span> &#123;</div><div class="line">  <span class="keyword">const</span> &#123; config &#125; = response</div><div class="line">  <span class="keyword">const</span> blob = <span class="keyword">new</span> Blob([response.data], &#123; <span class="attr">type</span>: response.headers[<span class="string">'content-type'</span>] &#125;)</div><div class="line">  <span class="keyword">const</span> url = <span class="built_in">window</span>.URL.createObjectURL(blob)</div><div class="line">  <span class="keyword">const</span> link = <span class="built_in">document</span>.createElement(<span class="string">'a'</span>)</div><div class="line">  link.href = url</div><div class="line">  <span class="keyword">const</span> fileName = response.request.getResponseHeader(<span class="string">'Content-Disposition'</span>)?.match(<span class="regexp">/(filename=)(.*)(?=;)/g</span>)?.[<span class="number">0</span>]?.split(<span class="string">'='</span>)[<span class="number">1</span>]</div><div class="line"></div><div class="line">  link.setAttribute(<span class="string">'download'</span>, fileName ? <span class="built_in">decodeURIComponent</span>(fileName) : config.downloadFileName)</div><div class="line">  link.click()</div><div class="line">  <span class="built_in">window</span>.URL.revokeObjectURL(url)</div><div class="line">  <span class="keyword">return</span> response</div><div class="line">&#125;)</div><div class="line"></div><div class="line"><span class="keyword">export</span> &#123; axiosDownload &#125;</div></pre></td></tr></table></figure>
+<h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// api.js</span></div><div class="line"></div><div class="line"><span class="keyword">import</span> &#123; axiosDownload &#125; <span class="keyword">from</span> <span class="string">'./request.js'</span></div><div class="line"></div><div class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">exportData</span> (<span class="params">parameter</span>) </span>&#123;</div><div class="line">  <span class="keyword">return</span> axiosDownload(&#123;</div><div class="line">    url: <span class="string">'/order/export'</span>,</div><div class="line">    params: parameter</div><div class="line">  &#125;)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line">&lt;template&gt;</div><div class="line">  &lt;button :loading=&quot;loading&quot; @click=&quot;export&quot;&gt;导出Execl&lt;/button&gt;</div><div class="line">&lt;/template&gt;</div><div class="line">&lt;script&gt;</div><div class="line">import &#123; exportData &#125; from &apos;./api.js&apos;</div><div class="line"></div><div class="line">export default &#123;</div><div class="line">  data() &#123;</div><div class="line">    return &#123;</div><div class="line">      loading: false,</div><div class="line">    &#125;</div><div class="line">  &#125;,</div><div class="line">  methods: &#123;</div><div class="line">    export() &#123;</div><div class="line">      const payload = &#123;&#125;</div><div class="line">      exportData(payload).then(res =&gt; &#123;</div><div class="line">          this.loading = false</div><div class="line">          return true</div><div class="line">        &#125;)</div><div class="line">        .catch(res =&gt; &#123;</div><div class="line">          console.log(&apos;导出报错: &apos;, res)</div><div class="line">          this.loading = false</div><div class="line">          this.$message.error(&apos;导出失败&apos;)</div><div class="line">          return false</div><div class="line">        &#125;)</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line">&lt;/script&gt;</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">JavaScript</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">js</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Web</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">stream</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">下载</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">download</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Axios</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/饭碗-技术/" class="article-tag-list-link color2">饭碗(技术)</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/12/17/axios-download-stream/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-interview-summary" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1417,11 +1530,11 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">移动端</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">js</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">js</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">移动端</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
@@ -1447,102 +1560,6 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2017/03/20/new-Date-pit/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-pc-textoverflow-ellipsis-invalid" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/03/05/pc-textoverflow-ellipsis-invalid/">pc text-overflow:ellipsis; IE10 以下不生效</a>
-    </h1>
-  
-
-        
-        <a href="/2017/03/05/pc-textoverflow-ellipsis-invalid/" class="archive-article-date">
-  	<time datetime="2017-03-05T15:42:46.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-03-05</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="pc-text-overflow-ellipsis-IE10-以下不生效"><a href="#pc-text-overflow-ellipsis-IE10-以下不生效" class="headerlink" title="pc text-overflow:ellipsis; IE10 以下不生效"></a>pc text-overflow:ellipsis; IE10 以下不生效</h3><p><img src="http://image.tf56.com/dfs/group1/M00/3B/C3/CiFBCln5Mx6AZ_8XAAAeGp38dNc801.png" alt="Alt text"></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">.txt-hide&#123;</div><div class="line">    width:100%;</div><div class="line">    white-space: nowrap;</div><div class="line">    text-overflow: ellipsis;</div><div class="line">    overflow: hidden;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>实现这样一个效果，发现iE10 以下包含10 不生效。<br>查了一下兼容性，到ie8 都是没有问题的。</p>
-<p>排查发现 是因为继承了 word-wrap: break-word; 样式所导致的。<br>修改之后为：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">.txt-hide&#123;</div><div class="line">    width:100%;</div><div class="line">    white-space: nowrap;</div><div class="line">    word-wrap: normal!important;</div><div class="line">    text-overflow: ellipsis;</div><div class="line">    overflow: hidden;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">pc</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">IE</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">css3</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/饭碗-技术/" class="article-tag-list-link color2">饭碗(技术)</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/03/05/pc-textoverflow-ellipsis-invalid/">展开全文 >></a>
         </p>
       
 
@@ -1709,6 +1726,34 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">JavaScript</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">js</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Web</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">stream</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">下载</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">download</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Axios</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">css</a>
               </li>
              
@@ -1734,14 +1779,6 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Jenkins</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">JavaScript</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">js</a>
               </li>
              
               <li class="article-tag-list-item">

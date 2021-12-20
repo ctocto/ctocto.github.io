@@ -152,6 +152,117 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-js_event_ delegate" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/12/20/js_event_ delegate/">简化版类jQuery的js事件委托</a>
+    </h1>
+  
+
+        
+        <a href="/2021/12/20/js_event_ delegate/" class="archive-article-date">
+  	<time datetime="2021-12-20T19:40:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-12-20</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// event.js</span></div><div class="line"><span class="keyword">const</span> matches = <span class="function">(<span class="params">element, query</span>) =&gt;</span> &#123;</div><div class="line">  <span class="keyword">const</span> matched = (element.document || element.ownerDocument).querySelectorAll(</div><div class="line">    query,</div><div class="line">  )</div><div class="line">  <span class="keyword">let</span> i = matched.length - <span class="number">1</span></div><div class="line">  <span class="keyword">while</span> (i &gt;= <span class="number">0</span> &amp;&amp; matched.item(i) !== element) &#123;</div><div class="line">    i -= <span class="number">1</span></div><div class="line">  &#125;</div><div class="line">  <span class="keyword">return</span> i &gt; <span class="number">-1</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">const</span> findAncestor = <span class="function">(<span class="params">element, selector</span>) =&gt;</span> &#123;</div><div class="line">  <span class="keyword">if</span> (<span class="keyword">typeof</span> element.closest === <span class="string">'function'</span>) &#123;</div><div class="line">    <span class="keyword">return</span> element.closest(selector) || <span class="literal">null</span></div><div class="line">  &#125;</div><div class="line">  <span class="keyword">while</span> (element) &#123;</div><div class="line">    <span class="keyword">if</span> (matches(element, selector)) &#123;</div><div class="line">      <span class="keyword">return</span> element</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// eslint-disable-next-line no-param-reassign</span></div><div class="line">    element = element.parentElement</div><div class="line">  &#125;</div><div class="line">  <span class="keyword">return</span> <span class="literal">null</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">const</span> listenerList = []</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * On</span></div><div class="line"><span class="comment"> * @param &#123;EventTarget&#125; element Element，document, window...</span></div><div class="line"><span class="comment"> * @param &#123;String&#125; query Descendant element classname or id</span></div><div class="line"><span class="comment"> * @param &#123;String&#125; eventNames Event type eg: click</span></div><div class="line"><span class="comment"> * @param &#123;Function&#125; fn callback</span></div><div class="line"><span class="comment"> * @param &#123;Boolean&#125; capture </span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="keyword">export</span> <span class="keyword">const</span> on = <span class="function">(<span class="params">element, query, eventNames, fn, capture = <span class="literal">false</span></span>) =&gt;</span> &#123;</div><div class="line">  <span class="keyword">const</span> events = eventNames.split(<span class="string">' '</span>)</div><div class="line">  events.forEach(<span class="function">(<span class="params">event</span>) =&gt;</span> &#123;</div><div class="line">    <span class="keyword">const</span> listener = <span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</div><div class="line">      <span class="keyword">const</span> delegateTarget = findAncestor(e.target, query)</div><div class="line">      <span class="keyword">if</span> (delegateTarget) &#123;</div><div class="line">        e.delegateTarget = delegateTarget</div><div class="line">        fn(e)</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">    listenerList.push(&#123; listener, element, query, event, capture &#125;)</div><div class="line">    element.addEventListener(event, listener, capture)</div><div class="line">  &#125;)</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * Off</span></div><div class="line"><span class="comment"> * @param &#123;EventTarget&#125; element Element，document, window...</span></div><div class="line"><span class="comment"> * @param &#123;String&#125; query Descendant element classname or id</span></div><div class="line"><span class="comment"> * @param &#123;String&#125; eventNames Event type A boolean value indicating that events of this type will be dispatched to the registered listener before being dispatched to any EventTarget beneath it in the DOM tree.</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="keyword">export</span> <span class="keyword">const</span> off = <span class="function">(<span class="params">element, query, eventNames</span>) =&gt;</span> &#123;</div><div class="line">  <span class="keyword">const</span> events = eventNames.split(<span class="string">' '</span>)</div><div class="line">  events.forEach(<span class="function">(<span class="params">event</span>) =&gt;</span> &#123;</div><div class="line">    listenerList.forEach(<span class="function">(<span class="params">item, index</span>) =&gt;</span> &#123;</div><div class="line">      <span class="keyword">if</span> (</div><div class="line">        item.element === element &amp;&amp;</div><div class="line">        item.query === query &amp;&amp;</div><div class="line">        item.event === event</div><div class="line">      ) &#123;</div><div class="line">        element.removeEventListener(event, item.listener, item.capture)</div><div class="line">        listenerList.splice(index, <span class="number">1</span>)</div><div class="line">      &#125;</div><div class="line">    &#125;)</div><div class="line">  &#125;)</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * Trigger</span></div><div class="line"><span class="comment"> * @param &#123;EventTarget&#125; element Element，document, window...</span></div><div class="line"><span class="comment"> * @param &#123;*&#125; event A string representing the name of the event.</span></div><div class="line"><span class="comment"> * @param &#123;*&#125; args An object, with the following properties: detail</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="keyword">export</span> <span class="keyword">const</span> trigger = <span class="function">(<span class="params">element, event, args</span>) =&gt;</span> &#123;</div><div class="line">  <span class="keyword">const</span> ev = <span class="keyword">new</span> CustomEvent(event, args)</div><div class="line">  element.dispatchEvent(ev)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>使用</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> * <span class="keyword">as</span> Event <span class="keyword">from</span> <span class="string">'./event.js'</span>;</div><div class="line"></div><div class="line"><span class="keyword">const</span> container = <span class="built_in">document</span>.querySelector(<span class="string">'.list'</span>)</div><div class="line">Event.on(container, <span class="string">'.item'</span>, <span class="string">'click'</span>, () =&gt; &#123;</div><div class="line">  <span class="built_in">console</span>.log(<span class="string">'Click'</span>);</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">JavaScript</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">js</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">event</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">delegate</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">on</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">off</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">事件委托</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/饭碗-技术/" class="article-tag-list-link color2">饭碗(技术)</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/12/20/js_event_ delegate/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-axios-download-stream" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1461,117 +1572,6 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2017/04/01/css-position-sticky/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-js_event_ delegate" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/01/js_event_ delegate/">简化版类jQuery的js事件委托</a>
-    </h1>
-  
-
-        
-        <a href="/2017/04/01/js_event_ delegate/" class="archive-article-date">
-  	<time datetime="2017-04-01T10:28:09.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-04-01</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// event.js</span></div><div class="line"><span class="keyword">const</span> matches = <span class="function">(<span class="params">element, query</span>) =&gt;</span> &#123;</div><div class="line">  <span class="keyword">const</span> matched = (element.document || element.ownerDocument).querySelectorAll(</div><div class="line">    query,</div><div class="line">  )</div><div class="line">  <span class="keyword">let</span> i = matched.length - <span class="number">1</span></div><div class="line">  <span class="keyword">while</span> (i &gt;= <span class="number">0</span> &amp;&amp; matched.item(i) !== element) &#123;</div><div class="line">    i -= <span class="number">1</span></div><div class="line">  &#125;</div><div class="line">  <span class="keyword">return</span> i &gt; <span class="number">-1</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">const</span> findAncestor = <span class="function">(<span class="params">element, selector</span>) =&gt;</span> &#123;</div><div class="line">  <span class="keyword">if</span> (<span class="keyword">typeof</span> element.closest === <span class="string">'function'</span>) &#123;</div><div class="line">    <span class="keyword">return</span> element.closest(selector) || <span class="literal">null</span></div><div class="line">  &#125;</div><div class="line">  <span class="keyword">while</span> (element) &#123;</div><div class="line">    <span class="keyword">if</span> (matches(element, selector)) &#123;</div><div class="line">      <span class="keyword">return</span> element</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// eslint-disable-next-line no-param-reassign</span></div><div class="line">    element = element.parentElement</div><div class="line">  &#125;</div><div class="line">  <span class="keyword">return</span> <span class="literal">null</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">const</span> listenerList = []</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * On</span></div><div class="line"><span class="comment"> * @param &#123;EventTarget&#125; element Element，document, window...</span></div><div class="line"><span class="comment"> * @param &#123;String&#125; query Descendant element classname or id</span></div><div class="line"><span class="comment"> * @param &#123;String&#125; eventNames Event type eg: click</span></div><div class="line"><span class="comment"> * @param &#123;Function&#125; fn callback</span></div><div class="line"><span class="comment"> * @param &#123;Boolean&#125; capture </span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="keyword">export</span> <span class="keyword">const</span> on = <span class="function">(<span class="params">element, query, eventNames, fn, capture = <span class="literal">false</span></span>) =&gt;</span> &#123;</div><div class="line">  <span class="keyword">const</span> events = eventNames.split(<span class="string">' '</span>)</div><div class="line">  events.forEach(<span class="function">(<span class="params">event</span>) =&gt;</span> &#123;</div><div class="line">    <span class="keyword">const</span> listener = <span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</div><div class="line">      <span class="keyword">const</span> delegateTarget = findAncestor(e.target, query)</div><div class="line">      <span class="keyword">if</span> (delegateTarget) &#123;</div><div class="line">        e.delegateTarget = delegateTarget</div><div class="line">        fn(e)</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">    listenerList.push(&#123; listener, element, query, event, capture &#125;)</div><div class="line">    element.addEventListener(event, listener, capture)</div><div class="line">  &#125;)</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * Off</span></div><div class="line"><span class="comment"> * @param &#123;EventTarget&#125; element Element，document, window...</span></div><div class="line"><span class="comment"> * @param &#123;String&#125; query Descendant element classname or id</span></div><div class="line"><span class="comment"> * @param &#123;String&#125; eventNames Event type A boolean value indicating that events of this type will be dispatched to the registered listener before being dispatched to any EventTarget beneath it in the DOM tree.</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="keyword">export</span> <span class="keyword">const</span> off = <span class="function">(<span class="params">element, query, eventNames</span>) =&gt;</span> &#123;</div><div class="line">  <span class="keyword">const</span> events = eventNames.split(<span class="string">' '</span>)</div><div class="line">  events.forEach(<span class="function">(<span class="params">event</span>) =&gt;</span> &#123;</div><div class="line">    listenerList.forEach(<span class="function">(<span class="params">item, index</span>) =&gt;</span> &#123;</div><div class="line">      <span class="keyword">if</span> (</div><div class="line">        item.element === element &amp;&amp;</div><div class="line">        item.query === query &amp;&amp;</div><div class="line">        item.event === event</div><div class="line">      ) &#123;</div><div class="line">        element.removeEventListener(event, item.listener, item.capture)</div><div class="line">        listenerList.splice(index, <span class="number">1</span>)</div><div class="line">      &#125;</div><div class="line">    &#125;)</div><div class="line">  &#125;)</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * Trigger</span></div><div class="line"><span class="comment"> * @param &#123;EventTarget&#125; element Element，document, window...</span></div><div class="line"><span class="comment"> * @param &#123;*&#125; event A string representing the name of the event.</span></div><div class="line"><span class="comment"> * @param &#123;*&#125; args An object, with the following properties: detail</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="keyword">export</span> <span class="keyword">const</span> trigger = <span class="function">(<span class="params">element, event, args</span>) =&gt;</span> &#123;</div><div class="line">  <span class="keyword">const</span> ev = <span class="keyword">new</span> CustomEvent(event, args)</div><div class="line">  element.dispatchEvent(ev)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>使用</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> * <span class="keyword">as</span> Event <span class="keyword">from</span> <span class="string">'./event.js'</span>;</div><div class="line"></div><div class="line"><span class="keyword">const</span> container = <span class="built_in">document</span>.querySelector(<span class="string">'.list'</span>)</div><div class="line">Event.on(container, <span class="string">'.item'</span>, <span class="string">'click'</span>, () =&gt; &#123;</div><div class="line">  <span class="built_in">console</span>.log(<span class="string">'Click'</span>);</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">JavaScript</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">js</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">event</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">delegate</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">on</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">off</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">事件委托</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/饭碗-技术/" class="article-tag-list-link color2">饭碗(技术)</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/04/01/js_event_ delegate/">展开全文 >></a>
         </p>
       
 

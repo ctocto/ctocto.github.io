@@ -152,6 +152,105 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-new-Date-pit" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/03/20/new-Date-pit/">new Date() 时间的坑</a>
+    </h1>
+  
+
+        
+        <a href="/2017/03/20/new-Date-pit/" class="archive-article-date">
+  	<time datetime="2017-03-20T11:20:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-03-20</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="new-Date-时间的坑"><a href="#new-Date-时间的坑" class="headerlink" title="new Date() 时间的坑"></a>new Date() 时间的坑</h3><p><code>字符串转换时间</code> </p>
+<p>后端返回字段  createdate: “2016-08-19 11:28:39”<br>而我只需要月和日，怎么办？<br>说说我一开始是怎么实现的：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">var createDate = new Date(&quot;2016-08-19 11:28:39&quot;);</div></pre></td></tr></table></figure>
+<p><img src="http://image.tf56.com/dfs/group1/M00/3B/C1/CiFBCVn5MiGAe-T5AAAWDeqD6bE637.png" alt="Alt text"></p>
+<p>哈哈，玩的好愉快，chrome 没问题，android（4.4.4） 没问题，掉咋天。iphone（6，8.4.1） 返回  <strong>Invalid Date </strong><br>查看相关文档，发现js 根本不知道这么做，可能某些浏览器 发展的比较牛逼，功能强大，就上天了。iphone 是用不了了。<br>解决方案：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">var createDate = &quot;2016-08-19 11:28:39&quot;.replace(/-/g,&quot;/&quot;);</div><div class="line">createDate = new Date(createDate);</div></pre></td></tr></table></figure>
+<p>却别就是  【 - 】  这个符号他是不支持的，  【/】 这个他是可以得。<br>然后进行   getDate() , getMonth()   等操作，就会飞了……</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">js</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">移动端</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">时间</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/饭碗-技术/" class="article-tag-list-link color2">饭碗(技术)</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/03/20/new-Date-pit/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-pc-textoverflow-ellipsis-invalid" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -534,6 +633,26 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Jenkins</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">event</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">delegate</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">on</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">off</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">事件委托</a>
               </li>
              
               <li class="article-tag-list-item">

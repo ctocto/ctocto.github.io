@@ -1,6 +1,6 @@
 ---
 title: 简化版类jQuery的js事件委托
-date: 2017-04-01 10:28:09
+date: 2021-12-20 19:40:00
 tags: [JavaScript,js,event,delegate,on,off,事件委托]
 categories: 饭碗(技术)
 ---

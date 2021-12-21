@@ -152,6 +152,116 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-H5_Toast" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/12/21/H5_Toast/">移动H5 Toast 提示组建</a>
+    </h1>
+  
+
+        
+        <a href="/2021/12/21/H5_Toast/" class="archive-article-date">
+  	<time datetime="2021-12-21T19:30:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-12-21</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>es6 + less 实现的移动web端信息提示组建</p>
+<p><img src="https://raw.githubusercontent.com/ctocto/ctocto.github.io/develop/images/72643c84-acd9-4204-8ba3-d892abebef24.png" alt="Toast loading" width="280"><img src="https://raw.githubusercontent.com/ctocto/ctocto.github.io/develop/images/ba65a6ad-4b59-40ab-9dec-402364ba1d43.png" alt="Toast Info" width="280"></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// Toast.js</span></div><div class="line"><span class="keyword">import</span> <span class="string">'./toast.less'</span>;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Toast</span> </span>&#123;</div><div class="line">  body = <span class="built_in">document</span>.body;</div><div class="line"></div><div class="line">  <span class="keyword">constructor</span>(content, type, duration = 2, onClose = () =&gt; &#123;&#125;) &#123;</div><div class="line">    <span class="keyword">this</span>.content = content;</div><div class="line">    <span class="keyword">this</span>.type = type;</div><div class="line">    <span class="keyword">this</span>.duration = duration;</div><div class="line">    <span class="keyword">this</span>.onClose = onClose;</div><div class="line"></div><div class="line">    <span class="keyword">this</span>.start();</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  start() &#123;</div><div class="line">    <span class="keyword">const</span> &#123; type &#125; = <span class="keyword">this</span>;</div><div class="line">    <span class="keyword">switch</span> (type) &#123;</div><div class="line">      <span class="keyword">case</span> <span class="string">'info'</span>:</div><div class="line">        <span class="keyword">this</span>.renderInfo();</div><div class="line">        <span class="keyword">break</span>;</div><div class="line"></div><div class="line">      <span class="keyword">case</span> <span class="string">'loading'</span>:</div><div class="line">        <span class="keyword">this</span>.renderLoading();</div><div class="line">        <span class="keyword">break</span>;</div><div class="line">      <span class="keyword">default</span>:</div><div class="line">        <span class="keyword">this</span>.renderInfo();</div><div class="line">        <span class="keyword">break</span>;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="keyword">static</span> info(content, duration, onClose) &#123;</div><div class="line">    <span class="keyword">const</span> text = <span class="built_in">document</span>.createTextNode(content);</div><div class="line">    <span class="keyword">return</span> <span class="keyword">new</span> Toast(text, <span class="string">'info'</span>, duration, onClose);</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="keyword">static</span> loading(content, duration = <span class="number">0</span>, onClose) &#123;</div><div class="line">    <span class="keyword">const</span> dom = <span class="built_in">document</span>.createElement(<span class="string">'div'</span>);</div><div class="line">    dom.setAttribute(<span class="string">'class'</span>, <span class="string">'lib-toast-loading'</span>);</div><div class="line">    <span class="keyword">let</span> appendContent = dom;</div><div class="line">    <span class="keyword">if</span> (content) &#123;</div><div class="line">      <span class="keyword">const</span> text = <span class="built_in">document</span>.createElement(<span class="string">'div'</span>);</div><div class="line">      text.setAttribute(<span class="string">'class'</span>, <span class="string">'lib-toast-loading-text'</span>);</div><div class="line">      text.textContent = content;</div><div class="line"></div><div class="line">      appendContent = [dom, text];</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">return</span> <span class="keyword">new</span> Toast(appendContent, <span class="string">'loading'</span>, duration, onClose);</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  hide() &#123;</div><div class="line">    <span class="keyword">this</span>.toast.removeEventListener(<span class="string">'touchmove'</span>, <span class="keyword">this</span>.refuseTouch, <span class="literal">false</span>);</div><div class="line">    <span class="keyword">this</span>.toast.remove();</div><div class="line">    <span class="keyword">this</span>.toast = <span class="literal">null</span>;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  renderInfo() &#123;</div><div class="line">    <span class="keyword">const</span> &#123; content &#125; = <span class="keyword">this</span>;</div><div class="line">    <span class="keyword">this</span>.render(content);</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  renderLoading() &#123;</div><div class="line">    <span class="keyword">const</span> &#123; content &#125; = <span class="keyword">this</span>;</div><div class="line">    <span class="keyword">this</span>.render(content);</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  refuseTouch(e) &#123;</div><div class="line">    e.stopPropagation();</div><div class="line">    e.preventDefault();</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  render(children) &#123;</div><div class="line">    <span class="keyword">const</span> baseCSS =</div><div class="line">      <span class="string">'transition: transform 200ms, opacity 200ms;transition-timing-function: cubic-bezier(0.250, 0.460, 0.450, 0.940);transform: scale(0);opacity: 0;'</span>;</div><div class="line">    <span class="keyword">this</span>.toast = <span class="built_in">document</span>.createElement(<span class="string">'div'</span>);</div><div class="line">    <span class="keyword">this</span>.toast.setAttribute(<span class="string">'class'</span>, <span class="string">'lib-toast-wrapper'</span>);</div><div class="line">    <span class="keyword">const</span> padding = <span class="built_in">document</span>.createElement(<span class="string">'div'</span>);</div><div class="line">    padding.setAttribute(<span class="string">'class'</span>, <span class="string">'li-toast-padding'</span>);</div><div class="line">    <span class="keyword">const</span> block = <span class="built_in">document</span>.createElement(<span class="string">'div'</span>);</div><div class="line">    padding.appendChild(block);</div><div class="line">    block.setAttribute(<span class="string">'class'</span>, <span class="string">'lib-toast-block'</span>);</div><div class="line">    block.style.cssText = baseCSS;</div><div class="line">    <span class="keyword">if</span> (<span class="built_in">Array</span>.isArray(children)) &#123;</div><div class="line">      block.append(...children);</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">      block.appendChild(children);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">this</span>.toast.appendChild(padding);</div><div class="line">    <span class="keyword">this</span>.body.appendChild(<span class="keyword">this</span>.toast);</div><div class="line">    <span class="keyword">this</span>.toast.addEventListener(<span class="string">'touchmove'</span>, <span class="keyword">this</span>.refuseTouch, <span class="literal">false</span>);</div><div class="line">    <span class="comment">// start animation</span></div><div class="line">    <span class="comment">// requestAnimationFrame(() =&gt; &#123;</span></div><div class="line">    <span class="comment">//   // block.style.cssText = `$&#123;baseCSS&#125; transform: scale(1); opacity: 1;`</span></div><div class="line">    <span class="comment">// &#125;)</span></div><div class="line">    setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</div><div class="line">      block.style.cssText = <span class="string">`<span class="subst">$&#123;baseCSS&#125;</span> transform: scale(1); opacity: 1;`</span>;</div><div class="line">    &#125;, <span class="number">0</span>);</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (<span class="keyword">this</span>.duration) &#123;</div><div class="line">      setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</div><div class="line">        <span class="keyword">this</span>.hide();</div><div class="line">      &#125;, <span class="keyword">this</span>.duration * <span class="number">1000</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.toast;</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">export</span> <span class="keyword">default</span> Toast;</div></pre></td></tr></table></figure>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// toast.less</span></div><div class="line"><span class="selector-class">.lib-toast-wrapper</span> &#123;</div><div class="line">  <span class="attribute">position</span>: fixed;</div><div class="line">  <span class="attribute">z-index</span>: <span class="number">9999</span>;</div><div class="line">  <span class="attribute">top</span>: <span class="number">0</span>;</div><div class="line">  <span class="attribute">left</span>: <span class="number">0</span>;</div><div class="line">  <span class="attribute">height</span>: <span class="number">100%</span>;</div><div class="line">  <span class="attribute">width</span>: <span class="number">100%</span>;</div><div class="line">  <span class="attribute">user-select</span>: none;</div><div class="line">  <span class="attribute">display</span>: table;</div><div class="line">  <span class="attribute">text-align</span>: center;</div><div class="line">  <span class="attribute">vertical-align</span>: middle;</div><div class="line"></div><div class="line">  <span class="selector-class">.li-toast-padding</span> &#123;</div><div class="line">    <span class="attribute">display</span>: table-cell;</div><div class="line">    <span class="attribute">height</span>: <span class="number">100%</span>;</div><div class="line">    <span class="attribute">width</span>: <span class="number">100%</span>;</div><div class="line">    <span class="attribute">text-align</span>: center;</div><div class="line">    <span class="attribute">vertical-align</span>: middle;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="selector-class">.lib-toast-block</span> &#123;</div><div class="line">    <span class="attribute">display</span>: inline-block;</div><div class="line">    <span class="attribute">padding</span>: <span class="number">0.5em</span> <span class="number">0.9em</span>;</div><div class="line">    <span class="attribute">border-radius</span>: <span class="number">4px</span>;</div><div class="line">    <span class="attribute">background</span>: rgba(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0.75</span>);</div><div class="line">    <span class="attribute">color</span>: <span class="number">#ffffff</span>;</div><div class="line">    <span class="attribute">vertical-align</span>: middle;</div><div class="line">  &#125;</div><div class="line">  <span class="selector-class">.lib-toast-loading</span> &#123;</div><div class="line">    <span class="attribute">margin</span>: <span class="number">0.4em</span> auto;</div><div class="line">    <span class="attribute">width</span>: <span class="number">2em</span>;</div><div class="line">    <span class="attribute">height</span>: <span class="number">2em</span>;</div><div class="line">    <span class="attribute">border-radius</span>: <span class="number">2em</span>;</div><div class="line">    <span class="attribute">border</span>: <span class="number">0.4em</span> solid rgba(<span class="number">255</span>, <span class="number">255</span>, <span class="number">255</span>, <span class="number">0.4</span>);</div><div class="line">    <span class="attribute">border-top-color</span>: <span class="number">#ffffff</span>;</div><div class="line">    <span class="attribute">animation</span>: loading <span class="number">1.2s</span> ease <span class="number">0s</span> infinite reverse backwards;</div><div class="line">  &#125;</div><div class="line">  <span class="selector-class">.lib-toast-loading-text</span> &#123;</div><div class="line">    <span class="attribute">margin-top</span>: <span class="number">0.3em</span>;</div><div class="line">   &#125;</div><div class="line">&#125;</div><div class="line"><span class="keyword">@keyframes</span> loading &#123;</div><div class="line">  <span class="selector-tag">0%</span> &#123; <span class="attribute">transform</span>: rotate(<span class="number">0deg</span>); &#125;</div><div class="line">  <span class="selector-tag">100%</span> &#123; <span class="attribute">transform</span>: rotate(-<span class="number">360deg</span>); &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><p>1、信息提示<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> Toast <span class="keyword">from</span> <span class="string">'./Toas.js'</span>;</div><div class="line"></div><div class="line">Toast.info(<span class="string">'提交成功'</span>);</div></pre></td></tr></table></figure></p>
+<p>2、加载提示<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> msg = message.loading(<span class="string">'加载中...'</span>); <span class="comment">// message.loading();</span></div><div class="line">setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</div><div class="line">  msg.hide();</div><div class="line">&#125;, <span class="number">1000</span>);</div></pre></td></tr></table></figure></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">H5</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">JavaScript</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">CSS</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Toast</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">提示框</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">组建</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/饭碗-技术/" class="article-tag-list-link color2">饭碗(技术)</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/12/21/H5_Toast/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-js_event_ delegate" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1493,114 +1603,6 @@
 
 
   
-    <article id="post-css-position-sticky" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/01/css-position-sticky/">position:sticky 的使用</a>
-    </h1>
-  
-
-        
-        <a href="/2017/04/01/css-position-sticky/" class="archive-article-date">
-  	<time datetime="2017-04-01T10:28:09.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-04-01</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><img src="http://image.tf56.com/dfs/group1/M00/3B/C1/CiFBCVn5MtiAXEZ9AANVkO5kPvw994.gif" alt="效果"></p>
-<p>如果你想想做这样一个滚动跟随。那你肯定第一时间想到的一定是 <strong>position:fixed;</strong> 这个css 属性，然后加上一段js 的代码。</p>
-<p>这个方式是可以的对于pc 浏览器和Android 浏览。但是对于ios 设备上的浏览器来说，它是不好的，它的反应会很慢，当你的滚动已经达到了你想要它浮起来的时候，它却没有，超出好多才浮到顶部。当然这并非是你因你的js  代码写的不够好。</p>
-<p>此时，你就应该用 <strong>position:sticky</strong> 这个样式了。</p>
-<p>你只需要这样做：</p>
-<p>判断浏览器是否支持sticky  这个属性，如果支持，给想要浮动跟随的 DOM 加上<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">.sticky&#123;</div><div class="line">    position: -webkit-sticky;</div><div class="line">    position: sticky;</div><div class="line">    top: 0;</div><div class="line">    z-index: 20;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>这样一个样式就好了，不需要js 代码。</p>
-<p>不支持的设备你就需要用  position:fixed; 的了，然后加上js 的判断代码，这里就不说js 代码了。</p>
-<p>一个判断是否支持sticky 的方式：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">var sticky = (function () &#123;</div><div class="line">                 var vendorList = [&apos;&apos;, &apos;-webkit-&apos;, &apos;-ms-&apos;, &apos;-moz-&apos;, &apos;-o-&apos;],</div><div class="line">                      vendorListLength = vendorList.length,</div><div class="line">                      stickyElement = document.createElement(&apos;div&apos;);</div><div class="line"></div><div class="line">                  for (var i = 0; i &lt; vendorListLength; i++) &#123;</div><div class="line">                      stickyElement.style.position = vendorList[i] + &apos;sticky&apos;;</div><div class="line">                      if (stickyElement.style.position !== &apos;&apos;) &#123;</div><div class="line">                          return true;</div><div class="line">                      &#125;</div><div class="line">                  &#125;</div><div class="line">                  return false;</div><div class="line">              &#125;)();</div></pre></td></tr></table></figure></p>
-<h5 id="Caniuse-兼容图"><a href="#Caniuse-兼容图" class="headerlink" title="Caniuse 兼容图"></a>Caniuse 兼容图</h5><p><img src="http://image.tf56.com/dfs/group1/M00/3B/C3/CiFBCln5MsaAf1HRAAEnHj11z2w245.png" alt="caniuse"></p>
-<p>由此图可以看出也并不是所有的 <strong>Android  设备</strong>  不支持  ， <strong>ios 设备</strong>  也并非全部支持。所以根据设备来判断，可能有误差。可以说高级浏览器是支持。</p>
-<h4 id="备注"><a href="#备注" class="headerlink" title="备注"></a>备注</h4><p>1、 使用sticky 样式的 元素  的  父级 及 其 祖先元素 的 overflow  得是  默认的 visible；<br>2、 父级 及 其 祖先元素 高度 与其 一样高，是没有效果的。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">css</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">移动端</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">pc</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">position</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/饭碗-技术/" class="article-tag-list-link color2">饭碗(技术)</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/04/01/css-position-sticky/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
@@ -1722,6 +1724,30 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">H5</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">JavaScript</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">CSS</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Toast</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">提示框</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">组建</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">MySql</a>
               </li>
              
@@ -1735,10 +1761,6 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">数据库</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">JavaScript</a>
               </li>
              
               <li class="article-tag-list-item">

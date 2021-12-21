@@ -152,6 +152,114 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-css-position-sticky" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/04/01/css-position-sticky/">position:sticky 的使用</a>
+    </h1>
+  
+
+        
+        <a href="/2017/04/01/css-position-sticky/" class="archive-article-date">
+  	<time datetime="2017-04-01T10:28:09.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-04-01</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><img src="http://image.tf56.com/dfs/group1/M00/3B/C1/CiFBCVn5MtiAXEZ9AANVkO5kPvw994.gif" alt="效果"></p>
+<p>如果你想想做这样一个滚动跟随。那你肯定第一时间想到的一定是 <strong>position:fixed;</strong> 这个css 属性，然后加上一段js 的代码。</p>
+<p>这个方式是可以的对于pc 浏览器和Android 浏览。但是对于ios 设备上的浏览器来说，它是不好的，它的反应会很慢，当你的滚动已经达到了你想要它浮起来的时候，它却没有，超出好多才浮到顶部。当然这并非是你因你的js  代码写的不够好。</p>
+<p>此时，你就应该用 <strong>position:sticky</strong> 这个样式了。</p>
+<p>你只需要这样做：</p>
+<p>判断浏览器是否支持sticky  这个属性，如果支持，给想要浮动跟随的 DOM 加上<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">.sticky&#123;</div><div class="line">    position: -webkit-sticky;</div><div class="line">    position: sticky;</div><div class="line">    top: 0;</div><div class="line">    z-index: 20;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>这样一个样式就好了，不需要js 代码。</p>
+<p>不支持的设备你就需要用  position:fixed; 的了，然后加上js 的判断代码，这里就不说js 代码了。</p>
+<p>一个判断是否支持sticky 的方式：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">var sticky = (function () &#123;</div><div class="line">                 var vendorList = [&apos;&apos;, &apos;-webkit-&apos;, &apos;-ms-&apos;, &apos;-moz-&apos;, &apos;-o-&apos;],</div><div class="line">                      vendorListLength = vendorList.length,</div><div class="line">                      stickyElement = document.createElement(&apos;div&apos;);</div><div class="line"></div><div class="line">                  for (var i = 0; i &lt; vendorListLength; i++) &#123;</div><div class="line">                      stickyElement.style.position = vendorList[i] + &apos;sticky&apos;;</div><div class="line">                      if (stickyElement.style.position !== &apos;&apos;) &#123;</div><div class="line">                          return true;</div><div class="line">                      &#125;</div><div class="line">                  &#125;</div><div class="line">                  return false;</div><div class="line">              &#125;)();</div></pre></td></tr></table></figure></p>
+<h5 id="Caniuse-兼容图"><a href="#Caniuse-兼容图" class="headerlink" title="Caniuse 兼容图"></a>Caniuse 兼容图</h5><p><img src="http://image.tf56.com/dfs/group1/M00/3B/C3/CiFBCln5MsaAf1HRAAEnHj11z2w245.png" alt="caniuse"></p>
+<p>由此图可以看出也并不是所有的 <strong>Android  设备</strong>  不支持  ， <strong>ios 设备</strong>  也并非全部支持。所以根据设备来判断，可能有误差。可以说高级浏览器是支持。</p>
+<h4 id="备注"><a href="#备注" class="headerlink" title="备注"></a>备注</h4><p>1、 使用sticky 样式的 元素  的  父级 及 其 祖先元素 的 overflow  得是  默认的 visible；<br>2、 父级 及 其 祖先元素 高度 与其 一样高，是没有效果的。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">css</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">移动端</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">pc</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">position</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/饭碗-技术/" class="article-tag-list-link color2">饭碗(技术)</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/04/01/css-position-sticky/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-new-Date-pit" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -564,6 +672,30 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">H5</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">JavaScript</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">CSS</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Toast</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">提示框</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">组建</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">MySql</a>
               </li>
              
@@ -577,10 +709,6 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">数据库</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">JavaScript</a>
               </li>
              
               <li class="article-tag-list-item">

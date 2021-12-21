@@ -178,9 +178,11 @@ Toast.info('提交成功');
 
 2、加载提示
 ```js
-const msg = message.loading('加载中...'); // message.loading();
+import Toast from './Toas.js';
+
+const toast = Toast.loading('加载中...'); // Toast.loading();
 setTimeout(() => {
-  msg.hide();
+  toast.hide();
 }, 1000);
 ```
     

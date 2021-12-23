@@ -152,6 +152,105 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-mysql_sql_ notes" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/12/23/mysql_sql_ notes/">实用的 MySql Sql语句记录</a>
+    </h1>
+  
+
+        
+        <a href="/2021/12/23/mysql_sql_ notes/" class="archive-article-date">
+  	<time datetime="2021-12-23T19:30:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-12-23</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="按日分组查询"><a href="#按日分组查询" class="headerlink" title="按日分组查询"></a>按日分组查询</h3><p>场景：统计一个月内每天各停车场的停车数量</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span></div><div class="line">	t.parking_name,</div><div class="line">	<span class="keyword">substr</span>( t.gmt_create, <span class="number">1</span>, <span class="number">10</span> ) <span class="keyword">AS</span> <span class="built_in">date</span>,</div><div class="line">	<span class="keyword">COUNT</span>( * ) <span class="keyword">AS</span> <span class="keyword">count</span> </div><div class="line"><span class="keyword">FROM</span></div><div class="line">	parking_flow t</div><div class="line"><span class="keyword">WHERE</span></div><div class="line">  t.gmt_create <span class="keyword">LIKE</span> <span class="string">'2021-12%'</span> </div><div class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span></div><div class="line">	<span class="keyword">substr</span>( t.gmt_create, <span class="number">1</span>, <span class="number">10</span> ), # 使用 <span class="keyword">substr</span> 函数</div><div class="line">	t.parking_id </div><div class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span></div><div class="line">	<span class="built_in">date</span>,</div><div class="line">  t.parking_name;</div></pre></td></tr></table></figure>
+<h3 id="查询-N-天前的数据"><a href="#查询-N-天前的数据" class="headerlink" title="查询 N 天前的数据"></a>查询 N 天前的数据</h3><p>场景：查询3天以前创建的订单</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span></div><div class="line">	* </div><div class="line"><span class="keyword">FROM</span></div><div class="line">	<span class="keyword">order</span> </div><div class="line"><span class="keyword">WHERE</span></div><div class="line">	<span class="keyword">NOW</span>( ) &gt; <span class="keyword">SUBDATE</span>( gmt_modify, <span class="built_in">INTERVAL</span> - <span class="number">3</span> <span class="keyword">DAY</span> );</div></pre></td></tr></table></figure>
+<h3 id="查询结果值转化"><a href="#查询结果值转化" class="headerlink" title="查询结果值转化"></a>查询结果值转化</h3><p>场景：性别显示汉字</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span></div><div class="line">	<span class="keyword">name</span>,</div><div class="line">	age,</div><div class="line"><span class="keyword">CASE</span> # 使用控制流语句</div><div class="line">	gender </div><div class="line">	<span class="keyword">WHEN</span> <span class="string">'1'</span> <span class="keyword">THEN</span> <span class="string">'男'</span> </div><div class="line">	<span class="keyword">WHEN</span> <span class="string">'2'</span> <span class="keyword">THEN</span> <span class="string">'女'</span></div><div class="line">  <span class="keyword">ELSE</span> <span class="string">'其他'</span> </div><div class="line">	<span class="keyword">END</span> <span class="keyword">AS</span> zh_gender</div><div class="line"><span class="keyword">FROM</span></div><div class="line">	<span class="keyword">user</span>;</div><div class="line">  </div><div class="line"># 或者</div><div class="line"></div><div class="line"><span class="keyword">SELECT</span></div><div class="line">	<span class="keyword">name</span>,</div><div class="line">	age,</div><div class="line"><span class="keyword">CASE</span> <span class="keyword">WHEN</span> gender = <span class="string">'1'</span> <span class="keyword">THEN</span> <span class="string">'男'</span> </div><div class="line">	<span class="keyword">WHEN</span> gender = <span class="string">'2'</span> <span class="keyword">THEN</span> <span class="string">'女'</span></div><div class="line">  <span class="keyword">ELSE</span> <span class="string">'其他'</span> </div><div class="line">	<span class="keyword">END</span> <span class="keyword">AS</span> zh_gender</div><div class="line"><span class="keyword">FROM</span></div><div class="line">	<span class="keyword">user</span>;</div></pre></td></tr></table></figure>
+<h3 id="查询几点到几点的数据"><a href="#查询几点到几点的数据" class="headerlink" title="查询几点到几点的数据"></a>查询几点到几点的数据</h3><p>场景：查询0点到6点的订单</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span></div><div class="line">	*</div><div class="line"><span class="keyword">FROM</span></div><div class="line">	<span class="keyword">order</span> t</div><div class="line"><span class="keyword">WHERE</span></div><div class="line">	t.gmt_create <span class="keyword">LIKE</span> <span class="string">'2021-09%'</span> </div><div class="line">	<span class="keyword">AND</span> t.gmt_create &gt;= <span class="keyword">CONCAT</span>( <span class="keyword">substr</span>( t.gmt_create, <span class="number">1</span>, <span class="number">10</span> ), <span class="string">' '</span>, <span class="string">'00:00:00'</span> ) # <span class="keyword">CONCAT</span> 字符串拼接函数</div><div class="line">	<span class="keyword">AND</span> t.gmt_create &lt;= <span class="keyword">CONCAT</span>( <span class="keyword">substr</span>( t.gmt_create, <span class="number">1</span>, <span class="number">10</span> ), <span class="string">' '</span>, <span class="string">'06:00:00'</span> );</div></pre></td></tr></table></figure>
+<h3 id="时长范围查询"><a href="#时长范围查询" class="headerlink" title="时长范围查询"></a>时长范围查询</h3><p>场景：查询停车时长为两个小时、3个小时、5个小时、8个小时内的分别的车辆数</p>
+<p>CASE 的一种使用场景</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span></div><div class="line"><span class="keyword">CASE</span></div><div class="line">	<span class="keyword">WHEN</span></div><div class="line">		( t.billing_duration ) &lt;= <span class="number">7200</span> <span class="keyword">THEN</span> <span class="string">'0-2'</span> </div><div class="line">			<span class="keyword">WHEN</span> ( t.billing_duration ) &lt;= <span class="number">14400</span> <span class="keyword">THEN</span> <span class="string">'2-4'</span> </div><div class="line">			<span class="keyword">WHEN</span> ( t.billing_duration ) &lt;= <span class="number">21600</span> <span class="keyword">THEN</span> <span class="string">'4-6'</span> </div><div class="line">			<span class="keyword">WHEN</span> ( t.billing_duration ) &lt;= <span class="number">28800</span> <span class="keyword">THEN</span> <span class="string">'6-8'</span> </div><div class="line">			<span class="keyword">WHEN</span> ( t.billing_duration ) &lt;= <span class="number">36000</span> <span class="keyword">THEN</span> <span class="string">'8-10'</span> </div><div class="line">			<span class="keyword">WHEN</span> ( t.billing_duration ) &lt;= <span class="number">43200</span> <span class="keyword">THEN</span> <span class="string">'10-12'</span> </div><div class="line">			<span class="keyword">WHEN</span> ( t.billing_duration ) &lt;= <span class="number">50400</span> <span class="keyword">THEN</span> <span class="string">'12-14'</span> </div><div class="line">			<span class="keyword">WHEN</span> ( t.billing_duration ) &lt;= <span class="number">57600</span> <span class="keyword">THEN</span> <span class="string">'14-16'</span> </div><div class="line">			<span class="keyword">WHEN</span> ( t.billing_duration ) &lt;= <span class="number">64800</span> <span class="keyword">THEN</span> <span class="string">'16-18'</span> </div><div class="line">			<span class="keyword">WHEN</span> ( t.billing_duration ) &lt;= <span class="number">72000</span> <span class="keyword">THEN</span> <span class="string">'18-20'</span> </div><div class="line">			<span class="keyword">WHEN</span> ( t.billing_duration ) &lt;= <span class="number">79200</span> <span class="keyword">THEN</span> <span class="string">'20-22'</span> </div><div class="line">			<span class="keyword">WHEN</span> ( t.billing_duration ) &lt;= <span class="number">86400</span> <span class="keyword">THEN</span> <span class="string">'22-24'</span></div><div class="line">      <span class="keyword">WHEN</span> ( t.billing_duration ) &gt; <span class="number">86400</span> <span class="keyword">THEN</span> <span class="string">'24~'</span> </div><div class="line">		<span class="keyword">END</span> <span class="keyword">AS</span> biid,</div><div class="line">		<span class="keyword">COUNT</span>( * ) </div><div class="line">	<span class="keyword">FROM</span></div><div class="line">		parking_order t </div><div class="line">	<span class="keyword">WHERE</span></div><div class="line">		t.gmt_create &gt;= <span class="string">'2021-12-01 00:00:00'</span> </div><div class="line">		<span class="keyword">AND</span> t.gmt_create &lt;= <span class="string">'2021-12-31 23:59:59'</span></div><div class="line">    <span class="keyword">AND</span> t.billing_duration &gt; <span class="number">0</span></div><div class="line">	<span class="keyword">GROUP</span> <span class="keyword">BY</span></div><div class="line">		biid </div><div class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span></div><div class="line">	t.billing_duration <span class="keyword">DESC</span> # 停车时长倒序</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">MySql</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Sql</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/饭碗-技术/" class="article-tag-list-link color2">饭碗(技术)</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/12/23/mysql_sql_ notes/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-SSL_certificate_ incomplete" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1448,141 +1547,6 @@
 
 
   
-    <article id="post-CentOS8_web服务部署" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/09/24/CentOS8_web服务部署/">CentOS8 部署web服务：Nginx、MySQL、Node.js</a>
-    </h1>
-  
-
-        
-        <a href="/2020/09/24/CentOS8_web服务部署/" class="archive-article-date">
-  	<time datetime="2020-09-24T10:46:09.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-09-24</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>一台Ali ECS cento8.2服务器, 开始部署服务</p>
-<h2 id="一、远程登录"><a href="#一、远程登录" class="headerlink" title="一、远程登录"></a>一、远程登录</h2><p>ssh、…</p>
-<h2 id="二、安装环境"><a href="#二、安装环境" class="headerlink" title="二、安装环境"></a>二、安装环境</h2><h3 id="安装-Git"><a href="#安装-Git" class="headerlink" title="安装 Git"></a>安装 Git</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">yum install git</div></pre></td></tr></table></figure>
-<h3 id="安装nvm"><a href="#安装nvm" class="headerlink" title="安装nvm"></a>安装nvm</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash</div><div class="line"></div><div class="line"><span class="built_in">source</span> ~/.bashrc</div></pre></td></tr></table></figure>
-<h3 id="安装Node-js"><a href="#安装Node-js" class="headerlink" title="安装Node.js"></a>安装Node.js</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">nvm install 14.12.0</div><div class="line"></div><div class="line">node -v</div></pre></td></tr></table></figure>
-<h3 id="安装Nginx"><a href="#安装Nginx" class="headerlink" title="安装Nginx"></a>安装Nginx</h3><p>要设置yum存储库，请创建/etc/yum.repos.d/nginx.repo 包含以下内容的文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">vi /etc/yum.repos.d/nginx.repo</div></pre></td></tr></table></figure></p>
-<p>一下内容拷贝进nginx.repo 文件，并保存。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">[nginx-stable]</div><div class="line">name=nginx stable repo</div><div class="line">baseurl=http://nginx.org/packages/centos/$releasever/$basearch/</div><div class="line">gpgcheck=1</div><div class="line">enabled=1</div><div class="line">gpgkey=https://nginx.org/keys/nginx_signing.key</div><div class="line">module_hotfixes=true</div><div class="line"></div><div class="line">[nginx-mainline]</div><div class="line">name=nginx mainline repo</div><div class="line">baseurl=http://nginx.org/packages/mainline/centos/$releasever/$basearch/</div><div class="line">gpgcheck=1</div><div class="line">enabled=0</div><div class="line">gpgkey=https://nginx.org/keys/nginx_signing.key</div><div class="line">module_hotfixes=true</div></pre></td></tr></table></figure></p>
-<p>要安装nginx，请运行以下命令：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">yum install nginx</div><div class="line"></div><div class="line">nginx -v</div></pre></td></tr></table></figure></p>
-<p>常用命令<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 查看nginx.conf配置文件目录</span></div><div class="line">nginx -t</div></pre></td></tr></table></figure></p>
-<h3 id="安装MySQL"><a href="#安装MySQL" class="headerlink" title="安装MySQL"></a>安装MySQL</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 下载mysql的repo源</span></div><div class="line">wget https://cdn.mysql.com//Downloads/MySQL-8.0/mysql-community-server-8.0.21-1.el8.x86_64.rpm <span class="comment">#选择RPM包 https://dev.mysql.com/downloads/mysql/  或 http://repo.mysql.com/yum/</span></div><div class="line"><span class="comment"># 安装源</span></div><div class="line">rpm -ivh mysql-community-server-8.0.21-1.el8.x86_64.rpm --nodeps --force</div><div class="line"><span class="comment"># 安装mysql (可以不需要前两步，直接执行安装，但可能版本不是想要的。)</span></div><div class="line">yum install mysql-server</div><div class="line"><span class="comment"># 如果安装过程中发生包冲突（... conflicts with file from package ...）,删除一个包，再尝试install</span></div><div class="line"><span class="comment"># 删除命令</span></div><div class="line">yum -y remove 包名</div><div class="line"><span class="comment"># 检查安装结果</span></div><div class="line">mysqladmin --version</div><div class="line"><span class="comment"># 初始化mysql</span></div><div class="line">mysqld --initialize //创建数据文件目录和mysql系统数据库 产生随机root密码</div></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"># 启动mysql服务</div><div class="line">systemctl start mysqld</div></pre></td></tr></table></figure>
-<p><img src="/images/mysql_journalctl_1.png" alt="无权限"></p>
-<p>启动失败，因为<code>/var/lib/mysql</code> 目录权限不够</p>
-<p><img src="/images/mysql_journalctl_2.png" alt="无权限"></p>
-<p><code>/var/lib/mysql</code> 目录授权<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">chown -R mysql:mysql /var/lib/mysql/</div></pre></td></tr></table></figure></p>
-<p><img src="/images/mysql_journalctl_3.png" alt="无权限"></p>
-<h4 id="2013-Lost-connection-to-MySQL-server-at-‘waiting-for-initial-communication-packet’-system-error-60-“Operation-timed-out”"><a href="#2013-Lost-connection-to-MySQL-server-at-‘waiting-for-initial-communication-packet’-system-error-60-“Operation-timed-out”" class="headerlink" title="2013 - Lost connection to MySQL server at ‘waiting for initial communication packet’, system error: 60 “Operation timed out”"></a>2013 - Lost connection to MySQL server at ‘waiting for initial communication packet’, system error: 60 “Operation timed out”</h4><p>首先找到 my.cnf centos系统下 此文件在 etc目录下。</p>
-<p>接着 vi my.cnf</p>
-<p>看看是否有绑定本地回环地址的配置，如果有，注释掉下面这段文字：（在文字之前加上#号即可）</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">然后找到[mysqld]部分的参数，在配置后面建立一个新行，添加下面这个参数：</div><div class="line"></div><div class="line">```skip-name-resolve</div></pre></td></tr></table></figure>
-<p>保存文件并重启MySQL</p>
-<h4 id="在忘记root密码的时候启动MySql"><a href="#在忘记root密码的时候启动MySql" class="headerlink" title="在忘记root密码的时候启动MySql"></a>在忘记root密码的时候启动MySql</h4><p><code>vi /etc/my.cnf</code></p>
-<p>在</p>
-<p>[mysqld] 下面加上:</p>
-<p><code>skip-grant-tables</code><br>配置项。</p>
-<p>保存文件并重启MySQL</p>
-<h4 id="MySql-命令"><a href="#MySql-命令" class="headerlink" title="MySql 命令"></a>MySql 命令</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"># 查看随机root 密码</div><div class="line">cat /var/log/mysqld.log | grep password </div><div class="line"># 或者</div><div class="line">cat /var/log/mysql/mysqld.log | grep password </div><div class="line"></div><div class="line"># 安全设置</div><div class="line">mysql_secure_installation</div><div class="line"></div><div class="line"># 登录</div><div class="line">mysql -uroot -p </div><div class="line"></div><div class="line"># 停止服务</div><div class="line">systemctl stop mysqld </div><div class="line"># 重启服务</div><div class="line">systemctl restart mysqld </div><div class="line"># 查看服务</div><div class="line">systemctl status mysqld</div></pre></td></tr></table></figure>
-<blockquote>
-<p><a href="https://ctocto.github.io/2020/09/24/MySql%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E5%AE%89%E5%85%A8%E8%AE%BE%E7%BD%AE/">安全设置</a></p>
-</blockquote>
-<h2 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 查看开机启动程序列表</span></div><div class="line">systemctl list-unit-files</div><div class="line"><span class="comment"># 查看指定应用是否开启开机启动，如：mysql, nginx</span></div><div class="line">systemctl list-unit-files | grep mysqld</div><div class="line">systemctl list-unit-files | grep nginx</div><div class="line"><span class="comment"># 设置开机启动，如：mysql，nginx</span></div><div class="line">systemctl <span class="built_in">enable</span> mysqld.service</div><div class="line">systemctl <span class="built_in">enable</span> nginx</div><div class="line"><span class="comment"># 检查是否已安装程序，如：nginx</span></div><div class="line">rpm -qa | grep -i nginx</div></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">服务器</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">CentOS</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Nginx</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">MySQL</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Node.js</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">nvm</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/饭碗-技术/" class="article-tag-list-link color2">饭碗(技术)</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/09/24/CentOS8_web服务部署/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
@@ -1841,6 +1805,10 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">tree</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Sql</a>
               </li>
              
               <li class="article-tag-list-item">

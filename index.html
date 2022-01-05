@@ -152,6 +152,118 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-crontab_shell" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/01/05/crontab_shell/">Linux crontab 定时任务-Shell脚本实现</a>
+    </h1>
+  
+
+        
+        <a href="/2022/01/05/crontab_shell/" class="archive-article-date">
+  	<time datetime="2022-01-05T10:59:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-01-05</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Linux crontab是用来定期执行程序的命令。</p>
+<p>当安装完成操作系统之后，默认便会启动此任务调度命令。</p>
+<p>crond 命令每分锺会定期检查是否有要执行的工作，如果有要执行的工作便会自动执行该工作。</p>
+<p><strong>注意：</strong> 新创建的 cron 任务，不会马上执行，至少要过 2 分钟后才可以，当然你可以重启 cron 来马上执行。</p>
+<h3 id="语法"><a href="#语法" class="headerlink" title="语法"></a><a href="https://www.runoob.com/linux/linux-comm-crontab.html" target="_blank" rel="external">语法</a></h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">crontab [ -u user ] file</div></pre></td></tr></table></figure>
+<p>或<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">crontab [ -u user ] &#123; -l | -r | -e &#125;</div></pre></td></tr></table></figure></p>
+<p>时间格式：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">*    *    *    *    *</div><div class="line">-    -    -    -    -</div><div class="line">|    |    |    |    |</div><div class="line">|    |    |    |    +----- 星期中星期几 (0 - 6) (星期天 为0)</div><div class="line">|    |    |    +---------- 月份 (1 - 12) </div><div class="line">|    |    +--------------- 一个月中的第几天 (1 - 31)</div><div class="line">|    +-------------------- 小时 (0 - 23)</div><div class="line">+------------------------- 分钟 (0 - 59)</div></pre></td></tr></table></figure></p>
+<h3 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h3><p>每月末通知充值流量卡，利用企业微信机器人发送消息通知提醒。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># crontab_list.sh</span></div><div class="line"></div><div class="line"><span class="meta">#!/bin/sh</span></div><div class="line"></div><div class="line"><span class="comment"># 每月20号通知检查流量卡余额</span></div><div class="line">0 10 20 * * sh +x /home/project/script/cellular_data.sh collect &gt;&gt; /home/project/script/cellular_data_collect.log 2&gt;&amp;1</div><div class="line"></div><div class="line"><span class="comment"># 每月25号通知检查流量卡余额</span></div><div class="line">0 10 25 * * sh +x /home/project/script/cellular_data.sh collect &gt;&gt; /home/project/script/cellular_data_collect.log 2&gt;&amp;1</div></pre></td></tr></table></figure>
+<p>cellular_data_collect.log 日志文件<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># cellular_data.sh</span></div><div class="line"></div><div class="line"><span class="meta">#!/bin/sh</span></div><div class="line"></div><div class="line">curl <span class="string">'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key='</span> \</div><div class="line">-H <span class="string">'Content-Type: application/json'</span> \</div><div class="line">-d <span class="string">'&#123;</span></div><div class="line"><span class="string">  "msgtype": "text",</span></div><div class="line"><span class="string">  "text": &#123;</span></div><div class="line"><span class="string">    "content": "🙋‍♂️Hi，各位少侠、女侠上午好。马上月底了请检查各自绑定的流量卡是否还充足，请酌情处理加油⛽️（续费）。🚗💨",</span></div><div class="line"><span class="string">    "mentioned_list":["@all"]</span></div><div class="line"><span class="string">  &#125;</span></div><div class="line"><span class="string">&#125;'</span></div></pre></td></tr></table></figure></p>
+<h4 id="sh文件需要设置可执行权限"><a href="#sh文件需要设置可执行权限" class="headerlink" title="sh文件需要设置可执行权限"></a>sh文件需要设置可执行权限</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">chmod 777</div></pre></td></tr></table></figure>
+<h4 id="生效-crontab-list中所有的任务"><a href="#生效-crontab-list中所有的任务" class="headerlink" title="生效 crontab_list中所有的任务"></a>生效 crontab_list中所有的任务</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">crontab ./crontab_list.sh</div></pre></td></tr></table></figure>
+<h4 id="查看任务"><a href="#查看任务" class="headerlink" title="查看任务"></a>查看任务</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">crontab -l</div></pre></td></tr></table></figure>
+<h4 id="新增任务"><a href="#新增任务" class="headerlink" title="新增任务"></a>新增任务</h4><p>如：新增一个每月最后一天提醒的任务</p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"># crontab_list.sh</div><div class="line"></div><div class="line">#!/bin/sh</div><div class="line"></div><div class="line"># 每月20号通知检查流量卡余额</div><div class="line">0 10 20 * * sh +x /home/project/script/cellular_data.sh collect &gt;&gt; /home/project/script/cellular_data_collect.log 2&gt;&amp;1</div><div class="line"></div><div class="line"># 每月25号通知检查流量卡余额</div><div class="line">0 10 25 * * sh +x /home/project/script/cellular_data.sh collect &gt;&gt; /home/project/script/cellular_data_collect.log 2&gt;&amp;1</div><div class="line"></div><div class="line"></div><div class="line"><span class="addition">+ # 每月最后一天通知检查下月充值情况</span></div><div class="line"><span class="addition">+ 0 10 28-31 * * [[ "$(date --date=tomorrow +\%d)" == "01" ]] &amp;&amp; sh +x /home/project/script/next_month.sh collect &gt;&gt; /home/project/script/cellular_data_collect.log 2&gt;&amp;1</span></div></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># next_month.sh</span></div><div class="line"></div><div class="line"><span class="meta">#!/bin/sh</span></div><div class="line"></div><div class="line">curl <span class="string">'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key='</span> \</div><div class="line">-H <span class="string">'Content-Type: application/json'</span> \</div><div class="line">-d <span class="string">'&#123;</span></div><div class="line"><span class="string">  "msgtype": "text",</span></div><div class="line"><span class="string">  "text": &#123;</span></div><div class="line"><span class="string">    "content": "🙋‍♂️Hi，各位少侠、女侠上午好。月底了请检查各自绑定的流量卡是否已为下月续费，如未续费请尽快处理。🚗💨",</span></div><div class="line"><span class="string">    "mentioned_list":["@all"]</span></div><div class="line"><span class="string">  &#125;</span></div><div class="line"><span class="string">&#125;'</span></div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Linux</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">crontab</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Shell</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">定时任务</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/饭碗-技术/" class="article-tag-list-link color2">饭碗(技术)</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2022/01/05/crontab_shell/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-consul_service_deregister" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1434,139 +1546,6 @@
 
 
   
-    <article id="post-jenkins_dokcer" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/09/28/jenkins_dokcer/">Jenkins Docker 部署实践</a>
-    </h1>
-  
-
-        
-        <a href="/2020/09/28/jenkins_dokcer/" class="archive-article-date">
-  	<time datetime="2020-09-28T16:29:09.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-09-28</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="Jenkins-Docker-部署实践"><a href="#Jenkins-Docker-部署实践" class="headerlink" title="Jenkins Docker 部署实践"></a>Jenkins Docker 部署实践</h3><h5 id="docker-compose-yml"><a href="#docker-compose-yml" class="headerlink" title="docker-compose.yml"></a>docker-compose.yml</h5><figure class="highlight docker"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">version: <span class="string">'3'</span>                                    <span class="comment"># 指定 docker-compose.yml 文件的写法格式</span></div><div class="line">services:                                       <span class="comment"># 多个容器集合</span></div><div class="line">  docker_jenkins: </div><div class="line">    <span class="keyword">user</span>: root                                  <span class="comment"># 为了避免一些权限问题 在这我使用了root</span></div><div class="line">    restart: always                             <span class="comment"># 重启方式</span></div><div class="line">    image: jenkins/jenkins:lts                  <span class="comment"># 指定服务所使用的镜像 在这里我选择了 LTS (长期支持)</span></div><div class="line">    container_name: jenkins                     <span class="comment"># 容器名称</span></div><div class="line">    ports:                                      <span class="comment"># 对外暴露的端口定义</span></div><div class="line">      - <span class="string">'7071:8080'</span></div><div class="line">      - <span class="string">'50000:50000'</span></div><div class="line">    volumes:                                    <span class="comment"># 卷挂载路径</span></div><div class="line">      - ./jenkins/jenkins_home/:/var/jenkins_home   <span class="comment"># 这是我们一开始创建的目录挂载到容器内的jenkins_home目录</span></div><div class="line">      - /var/<span class="keyword">run</span><span class="bash">/docker.sock:/var/run/docker.sock</span></div><div class="line"><span class="bash">      - /usr/bin/docker:/usr/bin/docker                 <span class="comment"># 这是为了我们可以在容器内使用docker命令</span></span></div><div class="line"><span class="bash">      - /usr/<span class="built_in">local</span>/bin/docker-compose:/usr/<span class="built_in">local</span>/bin/docker-compose     <span class="comment"># 同样的这是为了使用docker-compose命令</span></span></div></pre></td></tr></table></figure>
-<h5 id="run-Create-and-start-containers"><a href="#run-Create-and-start-containers" class="headerlink" title="run Create and start containers"></a>run Create and start containers</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker-compose up -d</div></pre></td></tr></table></figure>
-<p>强制重新构建容器<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker-compose up -d --force-recreate</div></pre></td></tr></table></figure></p>
-<h5 id="start"><a href="#start" class="headerlink" title="start"></a>start</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker-compose start</div></pre></td></tr></table></figure>
-<h5 id="stop"><a href="#stop" class="headerlink" title="stop"></a>stop</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker-compose stop</div></pre></td></tr></table></figure>
-<h5 id="restart"><a href="#restart" class="headerlink" title="restart"></a>restart</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker-compose restart</div></pre></td></tr></table></figure>
-<h5 id="dcoker-常用命令"><a href="#dcoker-常用命令" class="headerlink" title="dcoker 常用命令"></a>dcoker 常用命令</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"># 查看镜像列表</div><div class="line">docker images</div><div class="line"></div><div class="line"># 删除镜像</div><div class="line">docker rmi IMAGE ID</div><div class="line">docker rmi -f IMAGE ID # 强制删除</div><div class="line"></div><div class="line"># 删除未使用的镜像</div><div class="line">docker image prune</div><div class="line"></div><div class="line"># 列出所有在运行的容器信息</div><div class="line">docker ps</div><div class="line"></div><div class="line"># 查看所有运行或者不运行容器</div><div class="line">docker ps -a</div><div class="line"></div><div class="line"># 停止容器</div><div class="line">docker stop CONTAINER ID</div><div class="line"></div><div class="line"># 重启容器</div><div class="line">docker restart CONTAINER ID</div><div class="line"></div><div class="line"># 删除容器</div><div class="line">docker rm CONTAINER ID</div><div class="line"></div><div class="line"># 删除所有停止的容器</div><div class="line">docker container prune</div><div class="line"></div><div class="line"># 进入容器</div><div class="line">docker exec -it jenkins /bin/bash</div></pre></td></tr></table></figure>
-<h5 id="jenkins-plugins"><a href="#jenkins-plugins" class="headerlink" title="jenkins plugins"></a>jenkins plugins</h5><ul>
-<li>Docker</li>
-<li>Docker Pipeline</li>
-<li>Localization: Chinese (Simplified)</li>
-<li>NodeJS Plugin</li>
-<li>Simple Theme Plugin</li>
-</ul>
-<h5 id="QA"><a href="#QA" class="headerlink" title="QA"></a>QA</h5><ul>
-<li>WorkflowScript: 3: Invalid agent type “docker” specified. Must be one of [any, label, none] @ line 3, column 9.</li>
-</ul>
-<p><a href="https://stackoverflow.com/questions/62253474/jenkins-invalid-agent-type-docker-specified-must-be-one-of-any-label-none" target="_blank" rel="external">You have to install 2 plugins: Docker plugin and Docker Pipeline. Hope that helps.</a></p>
-<ul>
-<li><p>/var/jenkins_home/workspace/htzxh5-test@tmp/durable-8063fe32/script.sh: 1: /var/jenkins_home/workspace/htzxh5-test@tmp/durable-8063fe32/script.sh: docker: Permission denied</p>
-</li>
-<li><p>/bin/sh: 12: sudo: not found</p>
-</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">apt-get update &amp;&amp; \</div><div class="line">      apt-get -y install sudo</div></pre></td></tr></table></figure>
-<ul>
-<li><a href="https://superuser.com/questions/1418885/clear-jenkins-build-history-clear-build-yesterday" target="_blank" rel="external">Clear Jenkins build history</a></li>
-</ul>
-<p>Jenkins home page -&gt; Manage Jenkins -&gt; Script Console.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">def jobName = &quot;project-name&quot;  </div><div class="line">def job = Jenkins.instance.getItem(jobName)  </div><div class="line">job.getBuilds().each &#123; it.delete() &#125;  </div><div class="line">job.nextBuildNumber = 1   </div><div class="line">job.save()</div></pre></td></tr></table></figure></p>
-<ul>
-<li>docker in docker</li>
-</ul>
-<p><a href="https://tutorials.releaseworksacademy.com/learn/the-simple-way-to-run-docker-in-docker-for-ci" target="_blank" rel="external">The simple way to run Docker-in-Docker for CI</a></p>
-<ul>
-<li>windows cannot touch ‘/var/jenkins_home/copy_reference_file.log’: Permission denied</li>
-</ul>
-<p><a href="https://stackoverflow.com/questions/44065827/jenkins-wrong-volume-permissions" target="_blank" rel="external">The easy fix it to use the -u parameter. Keep in mind this will run as a root user (uid=0)</a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker run -u 0 -d -p 8080:8080 -p 50000:50000 -v /data/jenkins:/var/jenkins_home jenkins/jenkins:lts</div></pre></td></tr></table></figure></p>
-<ul>
-<li>install huawei cloud OBS</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">cd</span> /usr/<span class="built_in">local</span></div><div class="line">wget https://obs-community.obs.cn-north-1.myhuaweicloud.com/obsutil/current/obsutil_linux_amd64.tar.gz</div><div class="line">mkdir obsutil_linux_amd64</div><div class="line">tar -xzvf obsutil_linux_amd64.tar.gz -C obsutil_linux_amd64 --strip-components 1</div><div class="line"><span class="built_in">cd</span> obsutil_linux_amd64</div><div class="line">chmod 755 obsutil</div><div class="line">ln -s /usr/<span class="built_in">local</span>/obsutil_linux_amd64/obsutil /usr/bin/obsutil</div></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Docker</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">docker-compose</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Jenkins</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/饭碗-技术/" class="article-tag-list-link color2">饭碗(技术)</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/09/28/jenkins_dokcer/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
@@ -1581,7 +1560,7 @@
   <div class="outer">
     <div id="footer-info">
     	<div class="footer-left">
-    		&copy; 2021 Norther
+    		&copy; 2022 Norther
     	</div>
       	<div class="footer-right">
       		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
@@ -1785,6 +1764,22 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">删除</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Linux</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">crontab</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Shell</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">定时任务</a>
               </li>
              
               <li class="article-tag-list-item">

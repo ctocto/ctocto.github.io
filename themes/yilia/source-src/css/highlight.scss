@@ -159,3 +159,7 @@ pre .id,
 pre .css ~ * .id {
   color: #fd971f;
 }
+.article-entry .highlight.diff .addition {
+  color: #116329;
+  background-color: #dafbe1;
+}

@@ -152,6 +152,113 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-js_tree_filter" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/12/01/js_tree_filter/">js 递归过滤树形（tree）结构</a>
+    </h1>
+  
+
+        
+        <a href="/2020/12/01/js_tree_filter/" class="archive-article-date">
+  	<time datetime="2020-12-01T15:23:09.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-12-01</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h1><p>一个树型结构的数据，过滤掉不符合条件的节点，及其父节</p>
+<h1 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h1><p>过滤掉 type: ‘page’ 没有page 信息的 节点, 如果树干节点下没有一个符合条件的叶子节点那么就一同过滤掉</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> arr = [</div><div class="line">  &#123;</div><div class="line">    id: <span class="number">1</span>,</div><div class="line">    type: <span class="string">'group'</span>,</div><div class="line">    children: [</div><div class="line">      &#123;</div><div class="line">        id: <span class="number">11</span>,</div><div class="line">        type: <span class="string">'group'</span>,</div><div class="line">        children: [</div><div class="line">          &#123;</div><div class="line">            id: <span class="number">111</span>,</div><div class="line">            type: <span class="string">'page'</span>,</div><div class="line">            page: &#123;</div><div class="line">              name: <span class="string">'page-111'</span>,</div><div class="line">            &#125;</div><div class="line">          &#125;</div><div class="line">        ]</div><div class="line">      &#125;,</div><div class="line">      &#123;</div><div class="line">        id: <span class="number">12</span>,</div><div class="line">        type: <span class="string">'group'</span>,</div><div class="line">        children: [</div><div class="line">          &#123;</div><div class="line">            id: <span class="number">121</span>,</div><div class="line">            type: <span class="string">'page'</span>,</div><div class="line">            page: &#123;</div><div class="line">              name: <span class="string">'page-121'</span>,</div><div class="line">            &#125;</div><div class="line">          &#125;,</div><div class="line">          &#123;</div><div class="line">            id: <span class="number">122</span>,</div><div class="line">            type: <span class="string">'page'</span>,</div><div class="line">          &#125;</div><div class="line">        ]</div><div class="line">      &#125;</div><div class="line">    ]</div><div class="line">  &#125;,</div><div class="line">  &#123;</div><div class="line">    id: <span class="number">2</span>,</div><div class="line">    type: <span class="string">'group'</span>,</div><div class="line">    children: [</div><div class="line">      &#123;</div><div class="line">        id: <span class="number">21</span>,</div><div class="line">        type: <span class="string">'group'</span>,</div><div class="line">        children: [</div><div class="line">          &#123;</div><div class="line">            id: <span class="number">211</span>,</div><div class="line">            type: <span class="string">'page'</span>,</div><div class="line">          &#125;</div><div class="line">        ]</div><div class="line">      &#125;,</div><div class="line">      &#123;</div><div class="line">        id: <span class="number">22</span>,</div><div class="line">        type: <span class="string">'group'</span>,</div><div class="line">        children: [</div><div class="line">          &#123;</div><div class="line">            id: <span class="number">221</span>,</div><div class="line">            type: <span class="string">'group'</span>,</div><div class="line">            children: [</div><div class="line">              &#123;</div><div class="line">                id: <span class="number">2221</span>,</div><div class="line">                type: <span class="string">'page'</span>,</div><div class="line">              &#125;</div><div class="line">            ]</div><div class="line">          &#125;</div><div class="line">        ]</div><div class="line">      &#125;,</div><div class="line">      &#123;</div><div class="line">        id: <span class="number">23</span>,</div><div class="line">        type: <span class="string">'group'</span>,</div><div class="line">        children: [</div><div class="line">          &#123;</div><div class="line">            id: <span class="number">231</span>,</div><div class="line">            type: <span class="string">'page'</span></div><div class="line">          &#125;</div><div class="line">        ]</div><div class="line">      &#125;</div><div class="line">    ]</div><div class="line">  &#125;,</div><div class="line">  &#123;</div><div class="line">    id: <span class="number">3</span>,</div><div class="line">    type: <span class="string">'group'</span>,</div><div class="line">  &#125;,</div><div class="line">  &#123;</div><div class="line">    id: <span class="number">4</span>,</div><div class="line">    type: <span class="string">'group'</span>,</div><div class="line">    children: [</div><div class="line">      &#123;</div><div class="line">        id: <span class="number">41</span>,</div><div class="line">        type: <span class="string">'page'</span>,</div><div class="line">        page: &#123;</div><div class="line">          name: <span class="string">'page-41'</span>,</div><div class="line">        &#125;</div><div class="line">      &#125;</div><div class="line">    ]</div><div class="line">  &#125;</div><div class="line">]</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">filterNoPageMenu</span>(<span class="params">nav</span>) </span>&#123;</div><div class="line">  <span class="keyword">return</span> nav.filter(<span class="function"><span class="params">item</span> =&gt;</span> &#123;</div><div class="line">    <span class="keyword">if</span> (item.type === <span class="string">'page'</span> &amp;&amp; item.page) &#123;</div><div class="line">      <span class="keyword">return</span> <span class="literal">true</span></div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (item.type === <span class="string">'group'</span> &amp;&amp; item.children &amp;&amp; item.children.length) &#123;</div><div class="line">      <span class="keyword">const</span> res = filterNoPageMenu(item.children)</div><div class="line">      <span class="keyword">if</span> (res.length) &#123;</div><div class="line">        item.children = res</div><div class="line">        <span class="keyword">return</span> <span class="literal">true</span></div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="literal">false</span></div><div class="line">  &#125;)</div><div class="line">&#125;</div><div class="line"><span class="built_in">console</span>.log(<span class="built_in">JSON</span>.parse(<span class="built_in">JSON</span>.stringify(arr)))</div><div class="line"><span class="built_in">console</span>.log(filterNoPageMenu(arr))</div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">JavaScript</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">js</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">递归</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">过滤</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">filter</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">tree</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/饭碗-技术/" class="article-tag-list-link color2">饭碗(技术)</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/12/01/js_tree_filter/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-jenkins_dokcer" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1318,6 +1425,26 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">事件委托</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">密码</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">强度校验</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">password</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">check</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">strong</a>
               </li>
              
               <li class="article-tag-list-item">

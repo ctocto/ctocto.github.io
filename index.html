@@ -152,6 +152,115 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-js_password_check" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/01/12/js_password_check/">JavaScript 密码强度校验</a>
+    </h1>
+  
+
+        
+        <a href="/2022/01/12/js_password_check/" class="archive-article-date">
+  	<time datetime="2022-01-12T18:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-01-12</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>如果一个密码满足下述所有条件，则认为这个密码是强密码：</p>
+<p>  &emsp;由至少<code>8</code>个字符组成。<br><br>  &emsp;至少包含<code>一个小写</code>字母，<code>一个大写</code>字母，和<code>一个数字</code>。<br><br>  &emsp;至少包含 <code>_!@#$%^&amp;*</code> 特殊字符。<br><br>  &emsp;同一字符<code>不能</code>连续出现或者串联出行四次 (比如 “…aaaa…”、”…abcd…”、”…1234…”、”…dcba…” 是不允许的, 但是 “…aa…a…” 如果满足其他条件也可以算是强密码)。</p>
+<p>密码分为 5 个等级：<br><br>  &emsp;<code>Very Strong</code><br><br>  &emsp;<code>Strong</code><br><br>  &emsp;<code>Medium</code><br><br>  &emsp;<code>Weak</code><br><br>  &emsp;<code>Too weak</code></p>
+<h4 id="code"><a href="#code" class="headerlink" title="code"></a>code</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> LENGTH = <span class="number">1</span> &lt;&lt; <span class="number">0</span>; <span class="comment">// 长度</span></div><div class="line"><span class="keyword">const</span> LOWERCASE = <span class="number">1</span> &lt;&lt; <span class="number">1</span>; <span class="comment">// 小写字母</span></div><div class="line"><span class="keyword">const</span> UPPERCASE = <span class="number">1</span> &lt;&lt; <span class="number">2</span>; <span class="comment">// 大写字母</span></div><div class="line"><span class="keyword">const</span> NUMBER = <span class="number">1</span> &lt;&lt; <span class="number">3</span>; <span class="comment">// 数字</span></div><div class="line"><span class="keyword">const</span> SYMBOL = <span class="number">1</span> &lt;&lt; <span class="number">4</span>; <span class="comment">// 符号</span></div><div class="line"><span class="keyword">const</span> SERIES = <span class="number">1</span> &lt;&lt; <span class="number">5</span>; <span class="comment">// 串联/重复</span></div><div class="line"></div><div class="line"><span class="keyword">const</span> LEVEL_TOO_WEAK = <span class="string">'Too weak'</span>;</div><div class="line"><span class="keyword">const</span> LEVEL_WEAK = <span class="string">'Weak'</span>;</div><div class="line"><span class="keyword">const</span> LEVEL_MEDIUM = <span class="string">'Medium'</span>;</div><div class="line"><span class="keyword">const</span> LEVEL_STRONG = <span class="string">'Strong'</span>;</div><div class="line"><span class="keyword">const</span> LEVEL_VERY_STRONG = <span class="string">'Very Strong'</span>;</div><div class="line"></div><div class="line"><span class="keyword">const</span> defaultOptions = &#123;</div><div class="line">  minLength: <span class="number">8</span>,</div><div class="line">  allowedSymbols: <span class="string">'_!@#$%^&amp;*'</span>,</div><div class="line">  allowLx: <span class="literal">true</span>,</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">check</span>(<span class="params">password = <span class="string">''</span>, options = defaultOptions</span>) </span>&#123;</div><div class="line">  <span class="keyword">let</span> level = <span class="number">0</span>;</div><div class="line">  <span class="keyword">const</span> rules = [</div><div class="line">    &#123;</div><div class="line">      regex: <span class="string">'[a-z]'</span>,</div><div class="line">      flag: LOWERCASE,</div><div class="line">    &#125;,</div><div class="line">    &#123;</div><div class="line">      regex: <span class="string">'[A-Z]'</span>,</div><div class="line">      flag: UPPERCASE,</div><div class="line">    &#125;,</div><div class="line">    &#123;</div><div class="line">      regex: <span class="string">'[0-9]'</span>,</div><div class="line">      flag: NUMBER,</div><div class="line">    &#125;,</div><div class="line">    &#123;</div><div class="line">      regex: <span class="string">`[<span class="subst">$&#123;options.allowedSymbols&#125;</span>]`</span>,</div><div class="line">      flag: SYMBOL,</div><div class="line">    &#125;,</div><div class="line">  ];</div><div class="line"></div><div class="line">  <span class="keyword">if</span> (options.minLength &lt;= password.length) &#123;</div><div class="line">    level |= LENGTH;</div><div class="line">  &#125; <span class="keyword">else</span> &#123;</div><div class="line">    <span class="keyword">return</span> LEVEL_TOO_WEAK;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  level = rules.reduce(<span class="function">(<span class="params">acc, rule</span>) =&gt;</span> &#123;</div><div class="line">    <span class="comment">// console.log(rule.regex, new RegExp(`$&#123;rule.regex&#125;`).test(password))</span></div><div class="line">    <span class="keyword">if</span> (<span class="keyword">new</span> <span class="built_in">RegExp</span>(<span class="string">`<span class="subst">$&#123;rule.regex&#125;</span>`</span>).test(password)) &#123;</div><div class="line">      acc |= rule.flag;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> acc;</div><div class="line">  &#125;, level);</div><div class="line"></div><div class="line">  <span class="keyword">if</span> (options.allowLx &amp;&amp; lxStr(password)) &#123;</div><div class="line">    level |= SERIES;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="keyword">const</span> count = level.toString(<span class="number">2</span>).match(<span class="regexp">/1/g</span>).length;</div><div class="line">  <span class="comment">// console.log(level.toString(2))</span></div><div class="line">  <span class="keyword">if</span> (count &lt;= <span class="number">1</span>) &#123;</div><div class="line">    <span class="keyword">return</span> LEVEL_TOO_WEAK;</div><div class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (count &lt;= <span class="number">2</span>) &#123;</div><div class="line">    <span class="keyword">return</span> LEVEL_WEAK;</div><div class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (count &lt;= <span class="number">4</span>) &#123;</div><div class="line">    <span class="keyword">return</span> LEVEL_MEDIUM;</div><div class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (count &lt; <span class="number">6</span>) &#123;</div><div class="line">    <span class="keyword">return</span> LEVEL_STRONG;</div><div class="line">  &#125; <span class="keyword">else</span> &#123;</div><div class="line">    <span class="keyword">return</span> LEVEL_VERY_STRONG;</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">lxStr</span>(<span class="params">str, len = <span class="number">4</span></span>) </span>&#123;</div><div class="line">  <span class="keyword">const</span> arr = <span class="built_in">Array</span>.from(str);</div><div class="line">  <span class="keyword">if</span> (str &lt; len) &#123;</div><div class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">  &#125;</div><div class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; arr.length - len + <span class="number">1</span>; i++) &#123;</div><div class="line">    <span class="keyword">const</span> codeArr = [];</div><div class="line">    <span class="keyword">let</span> same = <span class="number">0</span>;</div><div class="line">    <span class="keyword">let</span> order = <span class="number">0</span>;</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> j = <span class="number">0</span>; j &lt; len; j++) &#123;</div><div class="line">      codeArr.push(str.charCodeAt(i + j));</div><div class="line">      <span class="keyword">if</span> (j !== <span class="number">0</span>) &#123;</div><div class="line">        <span class="keyword">if</span> (codeArr[j] === codeArr[j - <span class="number">1</span>]) &#123;</div><div class="line">          same += <span class="number">1</span>;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">if</span> (<span class="built_in">Math</span>.abs(codeArr[j] - codeArr[j - <span class="number">1</span>]) === <span class="number">1</span>) &#123;</div><div class="line">          order += <span class="number">1</span>;</div><div class="line">        &#125;</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (same === len - <span class="number">1</span> || order === len - <span class="number">1</span>) &#123;</div><div class="line">      <span class="comment">// console.log('low', len, str);</span></div><div class="line">      <span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">  <span class="comment">// console.log('strong', len, str);</span></div><div class="line">  <span class="keyword">return</span> <span class="literal">true</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">export</span> &#123; check &#125;;</div></pre></td></tr></table></figure>
+<h4 id="Test"><a href="#Test" class="headerlink" title="Test"></a>Test</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">console</span>.log(<span class="string">'qwer'</span>, check(<span class="string">'qwer'</span>)) <span class="comment">// Too weak</span></div><div class="line"><span class="built_in">console</span>.log(<span class="string">'qwer2342'</span>, check(<span class="string">'qwer2342'</span>)) <span class="comment">// Medium</span></div><div class="line"><span class="built_in">console</span>.log(<span class="string">'qwerA1234&amp;'</span>, check(<span class="string">'qwerA1234&amp;'</span>)) <span class="comment">// Strong</span></div><div class="line"><span class="built_in">console</span>.log(<span class="string">'qwerA2342&amp;'</span>, check(<span class="string">'qwerA2342&amp;'</span>)) <span class="comment">// Very Strong</span></div></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">JavaScript</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">密码</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">强度校验</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">password</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">check</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">strong</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/饭碗-技术/" class="article-tag-list-link color2">饭碗(技术)</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2022/01/12/js_password_check/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-crontab_shell" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1439,113 +1548,6 @@
 
 
   
-    <article id="post-js_tree_filter" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/12/01/js_tree_filter/">js 递归过滤树形（tree）结构</a>
-    </h1>
-  
-
-        
-        <a href="/2020/12/01/js_tree_filter/" class="archive-article-date">
-  	<time datetime="2020-12-01T15:23:09.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-12-01</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h1><p>一个树型结构的数据，过滤掉不符合条件的节点，及其父节</p>
-<h1 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h1><p>过滤掉 type: ‘page’ 没有page 信息的 节点, 如果树干节点下没有一个符合条件的叶子节点那么就一同过滤掉</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> arr = [</div><div class="line">  &#123;</div><div class="line">    id: <span class="number">1</span>,</div><div class="line">    type: <span class="string">'group'</span>,</div><div class="line">    children: [</div><div class="line">      &#123;</div><div class="line">        id: <span class="number">11</span>,</div><div class="line">        type: <span class="string">'group'</span>,</div><div class="line">        children: [</div><div class="line">          &#123;</div><div class="line">            id: <span class="number">111</span>,</div><div class="line">            type: <span class="string">'page'</span>,</div><div class="line">            page: &#123;</div><div class="line">              name: <span class="string">'page-111'</span>,</div><div class="line">            &#125;</div><div class="line">          &#125;</div><div class="line">        ]</div><div class="line">      &#125;,</div><div class="line">      &#123;</div><div class="line">        id: <span class="number">12</span>,</div><div class="line">        type: <span class="string">'group'</span>,</div><div class="line">        children: [</div><div class="line">          &#123;</div><div class="line">            id: <span class="number">121</span>,</div><div class="line">            type: <span class="string">'page'</span>,</div><div class="line">            page: &#123;</div><div class="line">              name: <span class="string">'page-121'</span>,</div><div class="line">            &#125;</div><div class="line">          &#125;,</div><div class="line">          &#123;</div><div class="line">            id: <span class="number">122</span>,</div><div class="line">            type: <span class="string">'page'</span>,</div><div class="line">          &#125;</div><div class="line">        ]</div><div class="line">      &#125;</div><div class="line">    ]</div><div class="line">  &#125;,</div><div class="line">  &#123;</div><div class="line">    id: <span class="number">2</span>,</div><div class="line">    type: <span class="string">'group'</span>,</div><div class="line">    children: [</div><div class="line">      &#123;</div><div class="line">        id: <span class="number">21</span>,</div><div class="line">        type: <span class="string">'group'</span>,</div><div class="line">        children: [</div><div class="line">          &#123;</div><div class="line">            id: <span class="number">211</span>,</div><div class="line">            type: <span class="string">'page'</span>,</div><div class="line">          &#125;</div><div class="line">        ]</div><div class="line">      &#125;,</div><div class="line">      &#123;</div><div class="line">        id: <span class="number">22</span>,</div><div class="line">        type: <span class="string">'group'</span>,</div><div class="line">        children: [</div><div class="line">          &#123;</div><div class="line">            id: <span class="number">221</span>,</div><div class="line">            type: <span class="string">'group'</span>,</div><div class="line">            children: [</div><div class="line">              &#123;</div><div class="line">                id: <span class="number">2221</span>,</div><div class="line">                type: <span class="string">'page'</span>,</div><div class="line">              &#125;</div><div class="line">            ]</div><div class="line">          &#125;</div><div class="line">        ]</div><div class="line">      &#125;,</div><div class="line">      &#123;</div><div class="line">        id: <span class="number">23</span>,</div><div class="line">        type: <span class="string">'group'</span>,</div><div class="line">        children: [</div><div class="line">          &#123;</div><div class="line">            id: <span class="number">231</span>,</div><div class="line">            type: <span class="string">'page'</span></div><div class="line">          &#125;</div><div class="line">        ]</div><div class="line">      &#125;</div><div class="line">    ]</div><div class="line">  &#125;,</div><div class="line">  &#123;</div><div class="line">    id: <span class="number">3</span>,</div><div class="line">    type: <span class="string">'group'</span>,</div><div class="line">  &#125;,</div><div class="line">  &#123;</div><div class="line">    id: <span class="number">4</span>,</div><div class="line">    type: <span class="string">'group'</span>,</div><div class="line">    children: [</div><div class="line">      &#123;</div><div class="line">        id: <span class="number">41</span>,</div><div class="line">        type: <span class="string">'page'</span>,</div><div class="line">        page: &#123;</div><div class="line">          name: <span class="string">'page-41'</span>,</div><div class="line">        &#125;</div><div class="line">      &#125;</div><div class="line">    ]</div><div class="line">  &#125;</div><div class="line">]</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">filterNoPageMenu</span>(<span class="params">nav</span>) </span>&#123;</div><div class="line">  <span class="keyword">return</span> nav.filter(<span class="function"><span class="params">item</span> =&gt;</span> &#123;</div><div class="line">    <span class="keyword">if</span> (item.type === <span class="string">'page'</span> &amp;&amp; item.page) &#123;</div><div class="line">      <span class="keyword">return</span> <span class="literal">true</span></div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (item.type === <span class="string">'group'</span> &amp;&amp; item.children &amp;&amp; item.children.length) &#123;</div><div class="line">      <span class="keyword">const</span> res = filterNoPageMenu(item.children)</div><div class="line">      <span class="keyword">if</span> (res.length) &#123;</div><div class="line">        item.children = res</div><div class="line">        <span class="keyword">return</span> <span class="literal">true</span></div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="literal">false</span></div><div class="line">  &#125;)</div><div class="line">&#125;</div><div class="line"><span class="built_in">console</span>.log(<span class="built_in">JSON</span>.parse(<span class="built_in">JSON</span>.stringify(arr)))</div><div class="line"><span class="built_in">console</span>.log(filterNoPageMenu(arr))</div></pre></td></tr></table></figure>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">JavaScript</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">js</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">递归</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">过滤</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">filter</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">tree</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/饭碗-技术/" class="article-tag-list-link color2">饭碗(技术)</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/12/01/js_tree_filter/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
@@ -1828,6 +1830,26 @@ getOwnMetadataKeys:function(t){return o(i(t),arguments.length<2?void 0:u(argumen
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">事件委托</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">密码</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">强度校验</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">password</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">check</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">strong</a>
               </li>
              
               <li class="article-tag-list-item">

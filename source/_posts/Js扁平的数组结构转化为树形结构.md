@@ -101,7 +101,10 @@ function listToTree(list, tree, pid) {
         children: [],
       };
       listToTree(list, child.children, item.id);
-
+      // 删掉不存在 children 值的属性
+      if (child.children.length <= 0) {
+        delete child.children
+      }
       tree.push(child);
     }
   });
@@ -109,4 +112,4 @@ function listToTree(list, tree, pid) {
 
 const result = []; 
 listToTree(list, result, 0);
-``
+```

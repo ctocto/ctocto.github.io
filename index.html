@@ -152,104 +152,6 @@
           <div id="js-content" class="content-ll">
             
   
-    <article id="post-Js扁平的数组结构转化为树形结构" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2022/03/15/Js扁平的数组结构转化为树形结构/">Js扁平的数组结构转化为树形结构</a>
-    </h1>
-  
-
-        
-        <a href="/2022/03/15/Js扁平的数组结构转化为树形结构/" class="archive-article-date">
-  	<time datetime="2022-03-15T18:30:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-03-15</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Js扁平的数组结构转化为树形结构，场景如：组织架构</p>
-<p>数据源：一维数组</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> list = [</div><div class="line">  &#123; <span class="attr">id</span>: <span class="number">2</span>, <span class="attr">name</span>: <span class="string">'部门2'</span>, <span class="attr">pid</span>: <span class="number">1</span>, &#125;,</div><div class="line">  &#123; <span class="attr">id</span>: <span class="number">1</span>, <span class="attr">name</span>: <span class="string">'部门1'</span>, <span class="attr">pid</span>: <span class="number">0</span>, &#125;,</div><div class="line">  &#123; <span class="attr">id</span>: <span class="number">3</span>, <span class="attr">name</span>: <span class="string">'部门3'</span>, <span class="attr">pid</span>: <span class="number">1</span>, &#125;,</div><div class="line">  &#123; <span class="attr">id</span>: <span class="number">4</span>, <span class="attr">name</span>: <span class="string">'部门4'</span>, <span class="attr">pid</span>: <span class="number">3</span>, &#125;,</div><div class="line">  &#123; <span class="attr">id</span>: <span class="number">5</span>, <span class="attr">name</span>: <span class="string">'部门5'</span>, <span class="attr">pid</span>: <span class="number">4</span>, &#125;,</div><div class="line">  &#123; <span class="attr">id</span>: <span class="number">6</span>, <span class="attr">name</span>: <span class="string">'部门6'</span>, <span class="attr">pid</span>: <span class="number">7</span>, &#125;,</div><div class="line">  &#123; <span class="attr">id</span>: <span class="number">7</span>, <span class="attr">name</span>: <span class="string">'部门7'</span>, <span class="attr">pid</span>: <span class="number">0</span>, &#125;,</div><div class="line">];</div></pre></td></tr></table></figure>
-<p>目标结果：树形结构<br><figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line">[</div><div class="line">  &#123;</div><div class="line">    <span class="attr">"id"</span>: <span class="number">1</span>,</div><div class="line">    <span class="attr">"name"</span>: <span class="string">"部门1"</span>,</div><div class="line">    <span class="attr">"pid"</span>: <span class="number">0</span>,</div><div class="line">    <span class="attr">"children"</span>: [</div><div class="line">      &#123; <span class="attr">"id"</span>: <span class="number">2</span>, <span class="attr">"name"</span>: <span class="string">"部门2"</span>, <span class="attr">"pid"</span>: <span class="number">1</span>, <span class="attr">"children"</span>: [] &#125;,</div><div class="line">      &#123;</div><div class="line">        <span class="attr">"id"</span>: <span class="number">3</span>,</div><div class="line">        <span class="attr">"name"</span>: <span class="string">"部门3"</span>,</div><div class="line">        <span class="attr">"pid"</span>: <span class="number">1</span>,</div><div class="line">        <span class="attr">"children"</span>: [</div><div class="line">          &#123;</div><div class="line">            <span class="attr">"id"</span>: <span class="number">4</span>,</div><div class="line">            <span class="attr">"name"</span>: <span class="string">"部门4"</span>,</div><div class="line">            <span class="attr">"pid"</span>: <span class="number">3</span>,</div><div class="line">            <span class="attr">"children"</span>: [&#123; <span class="attr">"id"</span>: <span class="number">5</span>, <span class="attr">"name"</span>: <span class="string">"部门5"</span>, <span class="attr">"pid"</span>: <span class="number">4</span>, <span class="attr">"children"</span>: [] &#125;]</div><div class="line">          &#125;</div><div class="line">        ]</div><div class="line">      &#125;</div><div class="line">    ]</div><div class="line">  &#125;,</div><div class="line">  &#123;</div><div class="line">    <span class="attr">"id"</span>: <span class="number">7</span>,</div><div class="line">    <span class="attr">"name"</span>: <span class="string">"部门7"</span>,</div><div class="line">    <span class="attr">"pid"</span>: <span class="number">0</span>,</div><div class="line">    <span class="attr">"children"</span>: [&#123; <span class="attr">"id"</span>: <span class="number">6</span>, <span class="attr">"name"</span>: <span class="string">"部门6"</span>, <span class="attr">"pid"</span>: <span class="number">7</span>, <span class="attr">"children"</span>: [] &#125;]</div><div class="line">  &#125;</div><div class="line">]</div></pre></td></tr></table></figure></p>
-<h3 id="方法一："><a href="#方法一：" class="headerlink" title="方法一："></a>方法一：</h3><p>遍历<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">listToTree</span>(<span class="params">list</span>) </span>&#123;</div><div class="line">  <span class="keyword">const</span> result = [];</div><div class="line">  <span class="keyword">const</span> obj = &#123;&#125;;</div><div class="line">  <span class="keyword">for</span> (<span class="keyword">const</span> item <span class="keyword">of</span> list) &#123;</div><div class="line">    <span class="keyword">const</span> id = item.id;</div><div class="line">    <span class="keyword">const</span> pid = item.pid;</div><div class="line">    <span class="keyword">if</span> (!obj[id]) &#123;</div><div class="line">      obj[id] = &#123;</div><div class="line">        children: [],</div><div class="line">      &#125;;</div><div class="line">    &#125;</div><div class="line">    obj[id] = &#123;</div><div class="line">      ...item,</div><div class="line">      children: obj[id].children,</div><div class="line">    &#125;;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (pid === <span class="number">0</span>) &#123;</div><div class="line">      result.push(obj[id]);</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">      <span class="keyword">if</span> (!obj[pid]) &#123;</div><div class="line">        obj[pid] = &#123;</div><div class="line">          children: [],</div><div class="line">        &#125;;</div><div class="line">      &#125;</div><div class="line">      obj[pid].children.push(obj[id]);</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">  <span class="comment">// console.log(obj)</span></div><div class="line">  <span class="keyword">return</span> result;</div><div class="line">&#125;</div><div class="line"></div><div class="line">listToTree(list)</div></pre></td></tr></table></figure></p>
-<h3 id="方法二"><a href="#方法二" class="headerlink" title="方法二"></a>方法二</h3><p>递归<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">listToTree</span>(<span class="params">list, tree, pid</span>) </span>&#123;</div><div class="line">  list.forEach(<span class="function"><span class="params">item</span> =&gt;</span> &#123;</div><div class="line">    <span class="keyword">if</span> (item.pid === pid) &#123;</div><div class="line">      <span class="keyword">const</span> child = &#123;</div><div class="line">        ...item,</div><div class="line">        children: [],</div><div class="line">      &#125;;</div><div class="line">      listToTree(list, child.children, item.id);</div><div class="line">      <span class="comment">// 删掉不存在 children 值的属性</span></div><div class="line">      <span class="keyword">if</span> (child.children.length &lt;= <span class="number">0</span>) &#123;</div><div class="line">        <span class="keyword">delete</span> child.children</div><div class="line">      &#125;</div><div class="line">      tree.push(child);</div><div class="line">    &#125;</div><div class="line">  &#125;);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">const</span> result = []; </div><div class="line">listToTree(list, result, <span class="number">0</span>);</div></pre></td></tr></table></figure></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">JavaScript</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">树形数据结构</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">数组</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/饭碗-技术/" class="article-tag-list-link color2">饭碗(技术)</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2022/03/15/Js扁平的数组结构转化为树形结构/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
     <article id="post-three-js-animation" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -257,13 +159,13 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2022/03/15/three-js-animation/">Three.js 动画</a>
+      <a class="article-title" href="/2022/09/27/three-js-animation/">Three.js 动画</a>
     </h1>
   
 
         
-        <a href="/2022/03/15/three-js-animation/" class="archive-article-date">
-  	<time datetime="2022-03-15T18:30:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-03-15</time>
+        <a href="/2022/09/27/three-js-animation/" class="archive-article-date">
+  	<time datetime="2022-09-27T19:37:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-09-27</time>
 </a>
         
       </header>
@@ -342,7 +244,105 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2022/03/15/three-js-animation/">展开全文 >></a>
+          <a class="article-more-a" href="/2022/09/27/three-js-animation/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-Js扁平的数组结构转化为树形结构" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/03/15/Js扁平的数组结构转化为树形结构/">Js扁平的数组结构转化为树形结构</a>
+    </h1>
+  
+
+        
+        <a href="/2022/03/15/Js扁平的数组结构转化为树形结构/" class="archive-article-date">
+  	<time datetime="2022-03-15T18:30:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-03-15</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Js扁平的数组结构转化为树形结构，场景如：组织架构</p>
+<p>数据源：一维数组</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> list = [</div><div class="line">  &#123; <span class="attr">id</span>: <span class="number">2</span>, <span class="attr">name</span>: <span class="string">'部门2'</span>, <span class="attr">pid</span>: <span class="number">1</span>, &#125;,</div><div class="line">  &#123; <span class="attr">id</span>: <span class="number">1</span>, <span class="attr">name</span>: <span class="string">'部门1'</span>, <span class="attr">pid</span>: <span class="number">0</span>, &#125;,</div><div class="line">  &#123; <span class="attr">id</span>: <span class="number">3</span>, <span class="attr">name</span>: <span class="string">'部门3'</span>, <span class="attr">pid</span>: <span class="number">1</span>, &#125;,</div><div class="line">  &#123; <span class="attr">id</span>: <span class="number">4</span>, <span class="attr">name</span>: <span class="string">'部门4'</span>, <span class="attr">pid</span>: <span class="number">3</span>, &#125;,</div><div class="line">  &#123; <span class="attr">id</span>: <span class="number">5</span>, <span class="attr">name</span>: <span class="string">'部门5'</span>, <span class="attr">pid</span>: <span class="number">4</span>, &#125;,</div><div class="line">  &#123; <span class="attr">id</span>: <span class="number">6</span>, <span class="attr">name</span>: <span class="string">'部门6'</span>, <span class="attr">pid</span>: <span class="number">7</span>, &#125;,</div><div class="line">  &#123; <span class="attr">id</span>: <span class="number">7</span>, <span class="attr">name</span>: <span class="string">'部门7'</span>, <span class="attr">pid</span>: <span class="number">0</span>, &#125;,</div><div class="line">];</div></pre></td></tr></table></figure>
+<p>目标结果：树形结构<br><figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line">[</div><div class="line">  &#123;</div><div class="line">    <span class="attr">"id"</span>: <span class="number">1</span>,</div><div class="line">    <span class="attr">"name"</span>: <span class="string">"部门1"</span>,</div><div class="line">    <span class="attr">"pid"</span>: <span class="number">0</span>,</div><div class="line">    <span class="attr">"children"</span>: [</div><div class="line">      &#123; <span class="attr">"id"</span>: <span class="number">2</span>, <span class="attr">"name"</span>: <span class="string">"部门2"</span>, <span class="attr">"pid"</span>: <span class="number">1</span>, <span class="attr">"children"</span>: [] &#125;,</div><div class="line">      &#123;</div><div class="line">        <span class="attr">"id"</span>: <span class="number">3</span>,</div><div class="line">        <span class="attr">"name"</span>: <span class="string">"部门3"</span>,</div><div class="line">        <span class="attr">"pid"</span>: <span class="number">1</span>,</div><div class="line">        <span class="attr">"children"</span>: [</div><div class="line">          &#123;</div><div class="line">            <span class="attr">"id"</span>: <span class="number">4</span>,</div><div class="line">            <span class="attr">"name"</span>: <span class="string">"部门4"</span>,</div><div class="line">            <span class="attr">"pid"</span>: <span class="number">3</span>,</div><div class="line">            <span class="attr">"children"</span>: [&#123; <span class="attr">"id"</span>: <span class="number">5</span>, <span class="attr">"name"</span>: <span class="string">"部门5"</span>, <span class="attr">"pid"</span>: <span class="number">4</span>, <span class="attr">"children"</span>: [] &#125;]</div><div class="line">          &#125;</div><div class="line">        ]</div><div class="line">      &#125;</div><div class="line">    ]</div><div class="line">  &#125;,</div><div class="line">  &#123;</div><div class="line">    <span class="attr">"id"</span>: <span class="number">7</span>,</div><div class="line">    <span class="attr">"name"</span>: <span class="string">"部门7"</span>,</div><div class="line">    <span class="attr">"pid"</span>: <span class="number">0</span>,</div><div class="line">    <span class="attr">"children"</span>: [&#123; <span class="attr">"id"</span>: <span class="number">6</span>, <span class="attr">"name"</span>: <span class="string">"部门6"</span>, <span class="attr">"pid"</span>: <span class="number">7</span>, <span class="attr">"children"</span>: [] &#125;]</div><div class="line">  &#125;</div><div class="line">]</div></pre></td></tr></table></figure></p>
+<h3 id="方法一："><a href="#方法一：" class="headerlink" title="方法一："></a>方法一：</h3><p>遍历<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">listToTree</span>(<span class="params">list</span>) </span>&#123;</div><div class="line">  <span class="keyword">const</span> result = [];</div><div class="line">  <span class="keyword">const</span> obj = &#123;&#125;;</div><div class="line">  <span class="keyword">for</span> (<span class="keyword">const</span> item <span class="keyword">of</span> list) &#123;</div><div class="line">    <span class="keyword">const</span> id = item.id;</div><div class="line">    <span class="keyword">const</span> pid = item.pid;</div><div class="line">    <span class="keyword">if</span> (!obj[id]) &#123;</div><div class="line">      obj[id] = &#123;</div><div class="line">        children: [],</div><div class="line">      &#125;;</div><div class="line">    &#125;</div><div class="line">    obj[id] = &#123;</div><div class="line">      ...item,</div><div class="line">      children: obj[id].children,</div><div class="line">    &#125;;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (pid === <span class="number">0</span>) &#123;</div><div class="line">      result.push(obj[id]);</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">      <span class="keyword">if</span> (!obj[pid]) &#123;</div><div class="line">        obj[pid] = &#123;</div><div class="line">          children: [],</div><div class="line">        &#125;;</div><div class="line">      &#125;</div><div class="line">      obj[pid].children.push(obj[id]);</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">  <span class="comment">// console.log(obj)</span></div><div class="line">  <span class="keyword">return</span> result;</div><div class="line">&#125;</div><div class="line"></div><div class="line">listToTree(list)</div></pre></td></tr></table></figure></p>
+<h3 id="方法二"><a href="#方法二" class="headerlink" title="方法二"></a>方法二</h3><p>递归<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">listToTree</span>(<span class="params">list, tree, pid</span>) </span>&#123;</div><div class="line">  list.forEach(<span class="function"><span class="params">item</span> =&gt;</span> &#123;</div><div class="line">    <span class="keyword">if</span> (item.pid === pid) &#123;</div><div class="line">      <span class="keyword">const</span> child = &#123;</div><div class="line">        ...item,</div><div class="line">        children: [],</div><div class="line">      &#125;;</div><div class="line">      listToTree(list, child.children, item.id);</div><div class="line">      <span class="comment">// 删掉不存在 children 值的属性</span></div><div class="line">      <span class="keyword">if</span> (child.children.length &lt;= <span class="number">0</span>) &#123;</div><div class="line">        <span class="keyword">delete</span> child.children</div><div class="line">      &#125;</div><div class="line">      tree.push(child);</div><div class="line">    &#125;</div><div class="line">  &#125;);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">const</span> result = []; </div><div class="line">listToTree(list, result, <span class="number">0</span>);</div></pre></td></tr></table></figure></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">JavaScript</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">树形数据结构</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">数组</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/饭碗-技术/" class="article-tag-list-link color2">饭碗(技术)</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2022/03/15/Js扁平的数组结构转化为树形结构/">展开全文 >></a>
         </p>
       
 
